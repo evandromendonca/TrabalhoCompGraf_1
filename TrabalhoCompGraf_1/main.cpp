@@ -1,10 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <gl/glut.h>
+#include "curvas.h"
 
 
 int main(int argc, char* argv[]) {
+	desenhaMenu();
+
 	system("pause");
 	return 0;
 }
+
+
+
+
 
