@@ -8,7 +8,7 @@ Point::Point(void) {
 
 Point::Point(float x, float y) {
 	m_x = x;
-	m_y = x;
+	m_y = y;
 }
 
 Point::~Point(void) {

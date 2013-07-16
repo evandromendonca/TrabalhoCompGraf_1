@@ -14,6 +14,9 @@ public:
 
 	Curve& operator=(const Curve&);
 
+	virtual void draw();
+	virtual void refresh();
+
 	void setCurveDegree(int);
 	void addControlPoint(Point);
 	void addControlPoint(float, float);
@@ -22,9 +25,6 @@ public:
 	vector<Point> getControlPoints();
 
 protected:
-	virtual void draw();
-	virtual void refresh();
-
 	vector<Point> m_controlPoints;
 	int m_curveDegree;
 	bool m_refreshNeeded;

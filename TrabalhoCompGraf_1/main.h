@@ -1,20 +1,26 @@
+#pragma once
+
+#include <vector>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector>
 
 #include <gl\glut.h>
 
-#include "curve.h"
+#include "beziercurve.h"
+#include "bspline.h"
 
 using namespace std;
 
-enum CURVE_TYPE { NotSelected = -1, Bezier = 1, BSpline = 2 };
+enum CURVE_TYPE { Bezier = 1, B_Spline = 2 };
 
 enum STATE {
 	NO_STATE = 0,
+    TYPE_ASSIGNED,
+    DEGREE_ASSIGNED,
+    TYPE_AND_DEGREE_ASSIGNED,
 	CURVE_SELECTED,
 	CREATING_CURVE,
 	SCALING_CURVE,
@@ -29,6 +35,9 @@ STATE currentState;
 int menuID;
 int curveTypeSubMenuID;
 int curveDegreeSubMenuID;
+
+CURVE_TYPE typeAssigned;
+int degreeAssigned;
 
 Curve *currentCurve;
 

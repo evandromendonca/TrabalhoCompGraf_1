@@ -8,7 +8,11 @@ void menu(int option) {
 
 		case 1:
 		case 2:
-			currentCurve = new Curve();
+            typeAssigned = (CURVE_TYPE)option;
+            if (currentState == NO_STATE)
+                currentState = TYPE_ASSIGNED;
+            else if (currentState == DEGREE_ASSIGNED)
+                currentState = TYPE_AND_DEGREE_ASSIGNED;
 			break;
 
 		case 3:
@@ -19,13 +23,23 @@ void menu(int option) {
 		case 8:
 		case 9:
 		case 10:
-			currentCurve->setCurveDegree(option);
-			break;
+            degreeAssigned = option;
+            if (currentState == TYPE_ASSIGNED)
+                currentState = TYPE_AND_DEGREE_ASSIGNED;
+            else if (currentState == NO_STATE)
+                currentState = DEGREE_ASSIGNED;
+            break;
 
 		case 11:
-			if (currentCurve->getCurveDegree() >= 3 && currentCurve->getCurveDegree() <= 10 &&
-				currentCurve->getControlPoints().size() < (size_t)(currentCurve->getCurveDegree() + 1))
-				currentState = CREATING_CURVE;
+			if (TYPE_AND_DEGREE_ASSIGNED) {
+                if (typeAssigned == Bezier)
+                    currentCurve = new BezierCurve();
+                else
+					currentCurve = new BSpline();
+                
+				currentCurve->setCurveDegree(degreeAssigned);
+                currentState = CREATING_CURVE;
+            }
 			break;
 
 		case 12:
@@ -36,7 +50,6 @@ void menu(int option) {
 
 		case 14:
 			break;
-
 	}
 
 	glutPostRedisplay();
@@ -75,14 +88,13 @@ void idle() {
 }
 
 void mouse(int button, int state, int x, int y) {
-	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE && currentCurve->getControlPoints().size() < (size_t)(currentCurve->getCurveDegree() + 1))
-		currentCurve->addControlPoint(x,y);
+	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE)
+		currentCurve->addControlPoint(x, y);
 
-	if (currentCurve->getControlPoints().size() == (currentCurve->getCurveDegree() + 1) && currentState == CREATING_CURVE) {
+	if (currentState == CREATING_CURVE && currentCurve->getControlPoints().size() == (currentCurve->getCurveDegree() + 1)) {
 		curves.push_back(currentCurve);
 		currentState = NO_STATE;
 	}
-	
     
     glutPostRedisplay();
 }
@@ -92,10 +104,12 @@ void display(void) {
 	glColor3f(0.0, 0.0, 1.0);
 
 	glBegin(GL_POINTS);
-	for(size_t i = 0; i < currentCurve->getControlPoints().size(); i++) {
-		Point p = currentCurve->getControlPoints().at(i);
-		glVertex2f(p.getX(), p.getY());
+
+	vector<Point> points = currentCurve->getControlPoints();
+	for(size_t i = 0; i < points.size(); i++) {
+		glVertex2f(points.at(i).getX(), points.at(i).getY());
 	}
+
 	glEnd();
 
 	glutSwapBuffers();
@@ -111,7 +125,7 @@ void init() {
 }
 
 int main(int argc, char **argv) {
-	//initialize variables
+	//initialize program state and variables
 	currentState = NO_STATE;
 	currentCurve = new Curve();
 

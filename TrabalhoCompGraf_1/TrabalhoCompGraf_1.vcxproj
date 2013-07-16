@@ -82,11 +82,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="beziercurve.cpp" />
+    <ClCompile Include="bspline.cpp" />
     <ClCompile Include="curve.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="beziercurve.h" />
+    <ClInclude Include="bspline.h" />
     <ClInclude Include="curve.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="point.h" />

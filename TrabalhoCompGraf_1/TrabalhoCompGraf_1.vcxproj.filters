@@ -27,6 +27,12 @@
     <ClCompile Include="curve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="beziercurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bspline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -36,6 +42,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="curve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="beziercurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bspline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
