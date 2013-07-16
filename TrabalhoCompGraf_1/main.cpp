@@ -2,7 +2,6 @@
 
 
 void menu(int option) {
-
 	switch(option) {
 		case 0:
 			exit(EXIT_SUCCESS);
@@ -67,17 +66,18 @@ void createMenu(void) {
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
-void display(void){
+
+void idle() {
+    glutSetWindow(window);
+    glutPostRedisplay();
+}
+
+void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 	glutSwapBuffers();
 } 
-
-void idle () {
-    glutSetWindow(window);
-    glutPostRedisplay();
-}
 
 int main(int argc, char **argv) {
 	//Initializing Glut
