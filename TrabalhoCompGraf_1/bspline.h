@@ -15,6 +15,6 @@ public:
 protected:
 
 private:
-
+	vector<Point> m_curvePoints;
 };
 

@@ -1,11 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
 
 #include <gl\glut.h>
 
@@ -14,7 +11,7 @@
 
 using namespace std;
 
-enum CURVE_TYPE { Bezier = 1, B_Spline = 2 };
+enum CURVE_TYPE { UNASIGNED = 0, BEZIER = 1, BSPLINE = 2 };
 
 enum STATE {
 	NO_STATE = 0,
@@ -22,6 +19,7 @@ enum STATE {
     DEGREE_ASSIGNED,
     TYPE_AND_DEGREE_ASSIGNED,
 	CURVE_SELECTED,
+	EDITING_CONTROL_POINTS,
 	CREATING_CURVE,
 	SCALING_CURVE,
 	TRANSLATING_CURVE,
@@ -35,13 +33,17 @@ STATE currentState;
 int menuID;
 int curveTypeSubMenuID;
 int curveDegreeSubMenuID;
+int curveOptionsSubMenuID;
 
 CURVE_TYPE typeAssigned;
 int degreeAssigned;
 
 Curve *currentCurve;
+int selectedCurveIndex;
 
 //Functions
+void saveCurves(string);
+void loadCurves(string);
 void menu(int);
 void createMenu(void);
 

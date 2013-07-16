@@ -1,5 +1,13 @@
 #include "main.h"
 
+void saveCurves(string fileName) {
+
+}
+
+void loadCurves(string fileName) {
+
+}
+
 void menu(int option) {
 	switch(option) {
 		case 0:
@@ -8,11 +16,11 @@ void menu(int option) {
 
 		case 1:
 		case 2:
-            typeAssigned = (CURVE_TYPE)option;
-            if (currentState == NO_STATE)
-                currentState = TYPE_ASSIGNED;
-            else if (currentState == DEGREE_ASSIGNED)
-                currentState = TYPE_AND_DEGREE_ASSIGNED;
+			typeAssigned = (CURVE_TYPE)option;
+			if (currentState == NO_STATE)
+				currentState = TYPE_ASSIGNED;
+			else if (currentState == DEGREE_ASSIGNED)
+				currentState = TYPE_AND_DEGREE_ASSIGNED;
 			break;
 
 		case 3:
@@ -23,60 +31,103 @@ void menu(int option) {
 		case 8:
 		case 9:
 		case 10:
-            degreeAssigned = option;
-            if (currentState == TYPE_ASSIGNED)
-                currentState = TYPE_AND_DEGREE_ASSIGNED;
-            else if (currentState == NO_STATE)
-                currentState = DEGREE_ASSIGNED;
-            break;
+			degreeAssigned = option;
+			if (currentState == TYPE_ASSIGNED)
+				currentState = TYPE_AND_DEGREE_ASSIGNED;
+			else if (currentState == NO_STATE)
+				currentState = DEGREE_ASSIGNED;
+			else if (currentState == CURVE_SELECTED)
+				currentState = EDITING_CONTROL_POINTS;
+			break;
 
 		case 11:
 			if (TYPE_AND_DEGREE_ASSIGNED) {
-                if (typeAssigned == Bezier)
-                    currentCurve = new BezierCurve();
-                else
+				if (typeAssigned == BEZIER)
+					currentCurve = new BezierCurve();
+				else if (typeAssigned == BSPLINE)
 					currentCurve = new BSpline();
+				else
+					currentCurve = new Curve();
                 
 				currentCurve->setCurveDegree(degreeAssigned);
-                currentState = CREATING_CURVE;
-            }
+				currentState = CREATING_CURVE;
+			}
 			break;
 
-		case 12:
+		case 12: {
+			string filename;
+			cout << "Digite o nome do arquivo onde deseja salvar as curvas:" << endl;
+			cin >> filename;
+			saveCurves(filename);
 			break;
+		}
 
-		case 13:
+		case 13: {
+			string filename;
+			cout << "Digite o nome do arquivo de onde deseja carregar as curvas:" << endl;
+			cin >> filename;
+			loadCurves(filename);
 			break;
+		}
 
 		case 14:
+			if (currentState == CURVE_SELECTED) {
+				currentState = TRANSLATING_CURVE;
+			}
+			break;
+
+		case 15:
+			if (currentState == CURVE_SELECTED) {
+				currentState = ROTATING_CURVE;
+			}
+			break;
+
+		case 16:
+			if (currentState == CURVE_SELECTED) {
+				currentState = SCALING_CURVE;
+			}
+			break;
+
+		case 17:
+			if (currentState == CURVE_SELECTED) {
+				curves.erase(curves.begin() + selectedCurveIndex);
+				currentState = NO_STATE;
+			}
 			break;
 	}
 
 	glutPostRedisplay();
 }
 
-void createMenu(void) {     
+void createMenu(void) {
 	curveTypeSubMenuID = glutCreateMenu(menu);
-    glutAddMenuEntry("Bézier", 1);
-    glutAddMenuEntry("B-Spline", 2);
+	glutAddMenuEntry("Bézier", 1);
+	glutAddMenuEntry("B-Spline", 2);
 
 	curveDegreeSubMenuID = glutCreateMenu(menu);
-    glutAddMenuEntry("3", 3);
-    glutAddMenuEntry("4", 4);
+	glutAddMenuEntry("3", 3);
+	glutAddMenuEntry("4", 4);
 	glutAddMenuEntry("5", 5);
-    glutAddMenuEntry("6", 6);
+	glutAddMenuEntry("6", 6);
 	glutAddMenuEntry("7", 7);
-    glutAddMenuEntry("8", 8);
+	glutAddMenuEntry("8", 8);
 	glutAddMenuEntry("9", 9);
-    glutAddMenuEntry("10", 10);
+	glutAddMenuEntry("10", 10);
+
+	curveOptionsSubMenuID = glutCreateMenu(menu);
+	glutAddMenuEntry("Transladar curva", 14);
+	glutAddMenuEntry("Rotacionar curva", 15);
+	glutAddMenuEntry("Escalar curva", 16);
+	glutAddMenuEntry("Excluir curva", 17);
+
 
 	menuID = glutCreateMenu(menu);
-    glutAddSubMenu("Escolher tipo de curva", curveTypeSubMenuID);
-    glutAddSubMenu("Escolher grau da Curva", curveDegreeSubMenuID);
+	glutAddSubMenu("Escolher tipo de curva", curveTypeSubMenuID);
+	glutAddSubMenu("Escolher grau da Curva", curveDegreeSubMenuID);
 	glutAddMenuEntry("Criar curva", 11);
-	glutAddMenuEntry("Excluir curva", 12);
-	glutAddMenuEntry("Salvar curvas", 13);
-	glutAddMenuEntry("Carregar curvas", 14);
+	glutAddMenuEntry("Salvar curvas", 12);
+	glutAddMenuEntry("Carregar curvas", 13);
+	glutAddSubMenu("Opções de curva", curveOptionsSubMenuID);
 	glutAddMenuEntry("Sair", 0);
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -128,6 +179,9 @@ int main(int argc, char **argv) {
 	//initialize program state and variables
 	currentState = NO_STATE;
 	currentCurve = new Curve();
+	selectedCurveIndex = -1;
+	typeAssigned = UNASIGNED;
+
 
 	//Initializing Glut
     glutInit(&argc, argv);
