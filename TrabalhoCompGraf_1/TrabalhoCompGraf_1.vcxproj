@@ -82,10 +82,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="curve.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="point.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="curve.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

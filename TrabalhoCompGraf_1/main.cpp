@@ -9,7 +9,6 @@ void menu(int option) {
 		case 1:
 		case 2:
 			currentCurve = new Curve();
-			currentCurve->curveType = (CURVE_TYPE)option;
 			break;
 
 		case 3:
@@ -20,13 +19,13 @@ void menu(int option) {
 		case 8:
 		case 9:
 		case 10:
-			currentCurve->curveDegree = option;
+			currentCurve->setCurveDegree(option);
 			break;
 
 		case 11:
-			if (currentCurve->curveDegree >= 3 && currentCurve->curveDegree <= 10 &&
-				currentCurve->curveType != NotSelected &&  currentCurve->points.size() < (size_t)(currentCurve->curveDegree + 1))
-				drawingCurve = true;
+			if (currentCurve->getCurveDegree() >= 3 && currentCurve->getCurveDegree() <= 10 &&
+				currentCurve->getControlPoints().size() < (size_t)(currentCurve->getCurveDegree() + 1))
+				currentState = CREATING_CURVE;
 			break;
 
 		case 12:
@@ -76,12 +75,12 @@ void idle() {
 }
 
 void mouse(int button, int state, int x, int y) {
-	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && drawingCurve && currentCurve->points.size() < (size_t)(currentCurve->curveDegree + 1))
-		currentCurve->points.push_back(Point(x, y));
+	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE && currentCurve->getControlPoints().size() < (size_t)(currentCurve->getCurveDegree() + 1))
+		currentCurve->addControlPoint(x,y);
 
-	if (currentCurve->points.size() == (currentCurve->curveDegree + 1) && drawingCurve) {
+	if (currentCurve->getControlPoints().size() == (currentCurve->getCurveDegree() + 1) && currentState == CREATING_CURVE) {
 		curves.push_back(currentCurve);
-		drawingCurve = false;
+		currentState = NO_STATE;
 	}
 	
     
@@ -93,9 +92,9 @@ void display(void) {
 	glColor3f(0.0, 0.0, 1.0);
 
 	glBegin(GL_POINTS);
-	for(int i = 0; i < currentCurve->points.size(); i++) {
-		Point p = currentCurve->points.at(i);
-		glVertex2f(p.x, p.y);
+	for(size_t i = 0; i < currentCurve->getControlPoints().size(); i++) {
+		Point p = currentCurve->getControlPoints().at(i);
+		glVertex2f(p.getX(), p.getY());
 	}
 	glEnd();
 
@@ -113,7 +112,7 @@ void init() {
 
 int main(int argc, char **argv) {
 	//initialize variables
-	drawingCurve = false;
+	currentState = NO_STATE;
 	currentCurve = new Curve();
 
 	//Initializing Glut
