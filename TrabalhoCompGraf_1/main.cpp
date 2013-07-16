@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 void menu(int option) {
 	switch(option) {
 		case 0:
@@ -9,7 +8,8 @@ void menu(int option) {
 
 		case 1:
 		case 2:
-			curveType = (CURVE_TYPE)option;
+			currentCurve = new Curve();
+			currentCurve->curveType = (CURVE_TYPE)option;
 			break;
 
 		case 3:
@@ -20,10 +20,12 @@ void menu(int option) {
 		case 8:
 		case 9:
 		case 10:
-			curveDegree = option;
+			currentCurve->curveDegree = option;
 			break;
 
 		case 11:
+			if (currentCurve->curveDegree >= 3 && currentCurve->curveDegree <= 10 && currentCurve->curveType != NotSelected)
+				drawingCurve = true;
 			break;
 
 		case 12:
@@ -60,8 +62,8 @@ void createMenu(void) {
     glutAddSubMenu("Escolher grau da Curva", curveDegreeSubMenuID);
 	glutAddMenuEntry("Criar curva", 11);
 	glutAddMenuEntry("Excluir curva", 12);
-	glutAddMenuEntry("Salvar curva", 13);
-	glutAddMenuEntry("Carregar curva", 14);
+	glutAddMenuEntry("Salvar curvas", 13);
+	glutAddMenuEntry("Carregar curvas", 14);
 	glutAddMenuEntry("Sair", 0);
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -69,6 +71,19 @@ void createMenu(void) {
 
 void idle() {
     glutSetWindow(window);
+    glutPostRedisplay();
+}
+
+void mouse(int button, int state, int x, int y) {
+	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && drawingCurve && currentCurve->points.size() < (size_t)(currentCurve->curveDegree + 1))
+		currentCurve->points.push_back(Point(x, y));
+
+	if (currentCurve->points.size() == (currentCurve->curveDegree + 1) && drawingCurve) {
+		curves.push_back(currentCurve);
+		drawingCurve = false;
+	}
+	
+    
     glutPostRedisplay();
 }
 
@@ -80,6 +95,10 @@ void display(void) {
 } 
 
 int main(int argc, char **argv) {
+	//initialize variables
+	drawingCurve = false;
+	currentCurve = new Curve();
+
 	//Initializing Glut
     glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -95,6 +114,7 @@ int main(int argc, char **argv) {
 	
 	//Setting function callbacks
     glutDisplayFunc(display);   
+	glutMouseFunc(mouse);
 	glutIdleFunc(idle);
 
 	//Starting the Glut main loop
