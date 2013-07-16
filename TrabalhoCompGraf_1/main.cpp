@@ -24,7 +24,8 @@ void menu(int option) {
 			break;
 
 		case 11:
-			if (currentCurve->curveDegree >= 3 && currentCurve->curveDegree <= 10 && currentCurve->curveType != NotSelected)
+			if (currentCurve->curveDegree >= 3 && currentCurve->curveDegree <= 10 &&
+				currentCurve->curveType != NotSelected &&  currentCurve->points.size() < (size_t)(currentCurve->curveDegree + 1))
 				drawingCurve = true;
 			break;
 
@@ -88,11 +89,27 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void display(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(0.0, 0.0, 1.0);
 
+	glBegin(GL_POINTS);
+	for(int i = 0; i < currentCurve->points.size(); i++) {
+		Point p = currentCurve->points.at(i);
+		glVertex2f(p.x, p.y);
+	}
+	glEnd();
 
 	glutSwapBuffers();
-} 
+}
+
+void init() {
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0);  
+	glMatrixMode(GL_PROJECTION);
+	gluOrtho2D(0.0, 1024.0, 768.0, 0.0);
+	glEnable( GL_POINT_SMOOTH );
+    glEnable( GL_BLEND );
+	glPointSize(5.0f);
+}
 
 int main(int argc, char **argv) {
 	//initialize variables
@@ -101,8 +118,7 @@ int main(int argc, char **argv) {
 
 	//Initializing Glut
     glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(1024, 768);
 
@@ -111,7 +127,10 @@ int main(int argc, char **argv) {
 
 	//Creating popup menu
     createMenu();
-	
+
+	//Initializing openGL environment
+	init();
+
 	//Setting function callbacks
     glutDisplayFunc(display);   
 	glutMouseFunc(mouse);

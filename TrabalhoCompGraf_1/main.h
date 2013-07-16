@@ -65,6 +65,8 @@ bool drawingCurve;
 void menu(int);
 void createMenu(void);
 
+void init();
+
 void idle();
 void mouse();
 void display(void);
