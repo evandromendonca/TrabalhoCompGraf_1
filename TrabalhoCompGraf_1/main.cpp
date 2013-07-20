@@ -1,11 +1,85 @@
 #include "main.h"
 
-void saveCurves(string fileName) {
+int getValue(string str) { 
+	int value;
 
+	stringstream strStream(str.c_str());
+	strStream >> value;
+
+	return value;
+}
+
+void saveCurves(string fileName) {
+	ofstream output;
+	output.open(fileName, ios::trunc);
+	
+	if(output.is_open()) {
+		for (size_t i = 0; i < curves.size(); i++) {
+			vector<Point> points = curves.at(i)->getControlPoints();
+
+			output << "BEGIN" << endl;
+			output << curves.at(i)->getType() << endl;
+			output << curves.at(i)->getCurveDegree() << endl;
+			for (size_t j = 0; j < points.size(); j++) {
+				output << points.at(j).getX() << " " << points.at(j).getY() << endl;
+			}
+			output << "END" << endl;
+		}
+	}
+	else
+		cout << "Couldn't open file";
+
+	output.close();
 }
 
 void loadCurves(string fileName) {
+	ifstream input;
+	input.open(fileName, ios::in);
+	
+	if(input.is_open()) {
+		Curve *curve;
+		Point point;
+		string buffer = "";	
 
+		while(!input.eof()) { 
+			input >> buffer;
+
+			if (buffer == "BEGIN") {
+				if (currentState == WAITING_BEGIN)
+					curves.push_back(curve);
+				currentState = READING_TYPE;
+			}
+			else if (currentState == READING_TYPE) {
+				if (buffer == "1")	
+					curve = new BezierCurve();
+				else
+					curve = new BSpline();
+
+				currentState = READING_DEGREE;
+			}
+			else if (currentState == READING_DEGREE) {
+				curve->setCurveDegree(getValue(buffer));
+
+				currentState = READING_POINTS;
+			}
+			else if (currentState == READING_POINTS) {
+				if (buffer == "END")
+					currentState = WAITING_BEGIN;
+				else {
+					point.setX(getValue(buffer));
+
+					input >> buffer;
+					point.setY(getValue(buffer));
+
+					curve->addControlPoint(point);
+				}
+			}
+		}
+		currentState = NO_STATE;
+		input.close();
+	}
+	else
+		cout << "Couldn't open file";
 }
 
 void menu(int option) {
@@ -41,7 +115,7 @@ void menu(int option) {
 			break;
 
 		case 11:
-			if (TYPE_AND_DEGREE_ASSIGNED) {
+			if (currentState == TYPE_AND_DEGREE_ASSIGNED) {
 				if (typeAssigned == BEZIER)
 					currentCurve = new BezierCurve();
 				else if (typeAssigned == BSPLINE)
@@ -142,7 +216,7 @@ void mouse(int button, int state, int x, int y) {
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE)
 		currentCurve->addControlPoint(x, y);
 
-	if (currentState == CREATING_CURVE && currentCurve->getControlPoints().size() == (currentCurve->getCurveDegree() + 1)) {
+	if (currentState == CREATING_CURVE && currentCurve->hasAllControlPoints()) {
 		curves.push_back(currentCurve);
 		currentState = NO_STATE;
 	}
@@ -156,9 +230,20 @@ void display(void) {
 
 	glBegin(GL_POINTS);
 
+
+	
 	vector<Point> points = currentCurve->getControlPoints();
 	for(size_t i = 0; i < points.size(); i++) {
 		glVertex2f(points.at(i).getX(), points.at(i).getY());
+	}
+
+
+	for (size_t i = 0; i < curves.size(); i++) {
+		points = curves.at(i)->getControlPoints();
+
+		for (size_t j = 0; j < points.size(); j++) {
+			glVertex2f(points.at(j).getX(), points.at(j).getY());
+		}
 	}
 
 	glEnd();
@@ -175,12 +260,12 @@ void init() {
 	glPointSize(5.0f);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) {  
 	//initialize program state and variables
 	currentState = NO_STATE;
 	currentCurve = new Curve();
 	selectedCurveIndex = -1;
-	typeAssigned = UNASIGNED;
+	typeAssigned = UNASSIGNED;
 
 
 	//Initializing Glut

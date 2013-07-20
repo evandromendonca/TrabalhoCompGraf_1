@@ -27,6 +27,10 @@ void Curve::refresh() {
 	m_refreshNeeded = false;
 }
 
+bool Curve::hasAllControlPoints() { 
+	return m_controlPoints.size() == m_curveDegree;
+}
+
 void Curve::setCurveDegree(int curveDegree) {
 	m_curveDegree = curveDegree;
 }
@@ -45,4 +49,8 @@ void Curve::addControlPoint(float x, float y) {
 
 vector<Point> Curve::getControlPoints() {
 	return m_controlPoints;
+}
+
+CURVE_TYPE Curve::getType() {
+	return UNASSIGNED;
 }

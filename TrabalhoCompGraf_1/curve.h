@@ -1,7 +1,10 @@
 #pragma once
 
+
 #include "point.h"
 #include <vector>
+
+enum CURVE_TYPE { UNASSIGNED = 0, BEZIER = 1, BSPLINE = 2 };
 
 using namespace std;
 
@@ -16,6 +19,8 @@ public:
 
 	virtual void draw();
 	virtual void refresh();
+	virtual bool hasAllControlPoints();
+	virtual CURVE_TYPE getType();
 
 	void setCurveDegree(int);
 	void addControlPoint(Point);

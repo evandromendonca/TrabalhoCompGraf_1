@@ -11,6 +11,8 @@ public:
 
 	virtual void draw();
 	virtual void refresh();
+	virtual bool hasAllControlPoints();
+	virtual CURVE_TYPE getType();
 
 protected:
 
