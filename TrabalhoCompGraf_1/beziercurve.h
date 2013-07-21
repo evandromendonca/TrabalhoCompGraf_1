@@ -9,7 +9,6 @@ public:
 	BezierCurve(void);
 	~BezierCurve(void);
 
-	virtual void draw();
 	virtual void refresh();
 	virtual bool hasAllControlPoints();
 	virtual CURVE_TYPE getType();

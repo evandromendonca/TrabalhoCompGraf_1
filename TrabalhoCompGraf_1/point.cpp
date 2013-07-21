@@ -37,5 +37,3 @@ float Point::getX() {
 float Point::getY() {
 	return m_y;
 }
-
-

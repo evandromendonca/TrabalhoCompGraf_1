@@ -10,10 +10,6 @@ BezierCurve::~BezierCurve(void) {
 
 }
 
-void BezierCurve::draw() {
-	Curve::draw();
-}
-
 void BezierCurve::refresh() {
 	m_curvePoints.clear();
 

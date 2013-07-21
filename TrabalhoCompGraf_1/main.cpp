@@ -9,7 +9,7 @@ int getValue(string str) {
 	return value;
 }
 
-void saveCurves(string fileName) {
+bool saveCurves(string fileName) {
 	ofstream output;
 	output.open(fileName, ios::trunc);
 	
@@ -26,13 +26,17 @@ void saveCurves(string fileName) {
 			output << "END_CURVE" << endl;
 		}
 	}
-	else
+	else {
 		cout << "Couldn't open file";
+		output.close();
+		return false;
+	}
 
 	output.close();
+	return true;
 }
 
-void loadCurves(string fileName) {
+bool loadCurves(string fileName) {
 	ifstream input;
 	input.open(fileName, ios::in);
 	
@@ -81,9 +85,12 @@ void loadCurves(string fileName) {
 		curves.push_back(curve);
 		currentState = NO_STATE;
 		input.close();
+		return true;
 	}
-	else
+	else {
 		cout << "Couldn't open file";
+		return false;
+	}
 }
 
 void menu(int option) {
@@ -134,17 +141,17 @@ void menu(int option) {
 
 		case 12: {
 			string filename;
-			cout << "Digite o nome do arquivo onde deseja salvar as curvas:" << endl;
+			cout << "Digite o nome do arquivo onde deseja salvar as curvas: ";
 			cin >> filename;
-			saveCurves(filename);
+			saveCurves(filename) ? cout << "As curvas foram salvas com sucesso!" << endl : cout << "Houve um erro no salvamento das curvas." << endl;
 			break;
 		}
 
 		case 13: {
 			string filename;
-			cout << "Digite o nome do arquivo de onde deseja carregar as curvas:" << endl;
+			cout << "Digite o nome do arquivo de onde deseja carregar as curvas: ";
 			cin >> filename;
-			loadCurves(filename);
+			loadCurves(filename) ? cout << "As curvas foram carregadas com sucesso!" << endl : cout << "Houve um erro no carregamento das curvas." << endl;;
 			break;
 		}
 
@@ -218,11 +225,13 @@ void idle() {
 }
 
 int checkCurveHit(int x, int y) {
+	//Trocar a ordem, porque o ultimo supostamente foi desenhado por ultimo e tem preferencia na seleção por estar na "frente"
 	for (size_t i = 0; i < curves.size(); i++) {
 		vector<Point> points = curves.at(i)->getCurvePoints();
 
 		for (size_t j = 0; j < points.size(); j++) {
-			if ( (x > (points.at(j).getX() - 10) && x < (points.at(j).getX() + 10)) && (y > (points.at(j).getY() - 10) && y < (points.at(j).getY() + 10)))
+			//Declarei constantes só para facilitar a leitura (evandromendonca)
+			if ( (x > (points.at(j).getX() - ACCURACY_SIZE) && x < (points.at(j).getX() + ACCURACY_SIZE)) && (y > (points.at(j).getY() - ACCURACY_SIZE) && y < (points.at(j).getY() + ACCURACY_SIZE)))
 				return i;
 		}
 	}
@@ -257,10 +266,11 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void drawControlPoints() {
-	glColor3f(1.0, 0.0, 0.0);
+	glColor3f(COLOR_BLUE);
 
 	glBegin(GL_POINTS);
 
+	//Draw only the control points of the current curve
 	for (size_t i = 0; i < currentCurve->getControlPoints().size(); i++) {
 		glVertex2d(currentCurve->getControlPoints()[i].getX(), currentCurve->getControlPoints()[i].getY());	
 	}
@@ -274,7 +284,10 @@ void display(void) {
 	drawControlPoints();				
 	
 	for (size_t i = 0; i < curves.size(); i++) {
-		curves.at(i)->draw();
+		if (selectedCurveIndex == i)
+			curves.at(i)->draw(COLOR_RED);
+		else
+			curves.at(i)->draw(COLOR_GREEN);
 	}
 	
 	glutSwapBuffers();

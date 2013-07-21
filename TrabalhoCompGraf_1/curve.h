@@ -4,7 +4,7 @@
 #include "point.h"
 #include <vector>
 
-#include <gl\glut.h>
+#include <gl\GLUT.h>
 
 enum CURVE_TYPE { UNASSIGNED = 0, BEZIER = 1, BSPLINE = 2 };
 
@@ -19,11 +19,11 @@ public:
 
 	Curve& operator=(const Curve&);
 
-	virtual void draw();
 	virtual void refresh();
 	virtual bool hasAllControlPoints();
 	virtual CURVE_TYPE getType();
 
+	void draw(GLfloat, GLfloat, GLfloat);
 	void setCurveDegree(int);
 	void addControlPoint(Point);
 	void addControlPoint(float, float);

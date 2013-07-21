@@ -9,7 +9,6 @@ public:
 	BSpline(void);
 	~BSpline(void);
 
-	virtual void draw();
 	virtual void refresh();
 	virtual bool hasAllControlPoints();
 	virtual CURVE_TYPE getType();

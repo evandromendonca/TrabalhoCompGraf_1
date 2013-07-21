@@ -11,6 +11,14 @@
 
 using namespace std;
 
+//Constants
+#define ACCURACY_SIZE 10
+
+//Fiquei na duvida se era melhor fazer um struct de cor, ou deixar em constantes, fica para vc decidir Luís
+#define COLOR_RED 1.0, 0.0, 0.0
+#define COLOR_GREEN 0.0, 1.0, 0.0
+#define COLOR_BLUE 0.0, 0.0, 1.0
+
 
 enum STATE {
 	NO_STATE = 0,
@@ -50,8 +58,8 @@ int selectedCurveIndex;
 
 //Functions
 int getValue(string);
-void saveCurves(string);
-void loadCurves(string);
+bool saveCurves(string);
+bool loadCurves(string);
 void menu(int);
 void createMenu(void);
 int checkCurveHit(int, int);

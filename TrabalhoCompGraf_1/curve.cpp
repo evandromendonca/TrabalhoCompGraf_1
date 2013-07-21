@@ -17,10 +17,10 @@ Curve::~Curve(void) {
 
 }
 
-void Curve::draw() {
+void Curve::draw(GLfloat r, GLfloat g, GLfloat b) {
 
 	//Begin drawing curves
-	glColor3f(0.0, 1.0, 0.0);			//Set red color
+	glColor3f(r, g, b);			//Set curve color
 	glBegin(GL_LINES);
 	for (size_t j = 0; j < m_curvePoints.size() - 1; j++) {
 		glVertex2f(m_curvePoints[j].getX(), m_curvePoints[j].getY());
@@ -29,6 +29,7 @@ void Curve::draw() {
 	glEnd();
 	//End drawing curves
 }
+
 
 void Curve::refresh() {
 

@@ -10,10 +10,6 @@ BSpline::~BSpline(void) {
 
 }
 
-void BSpline::draw() {
-
-}
-
 void BSpline::refresh() {
 	m_curvePoints.clear();
 }
