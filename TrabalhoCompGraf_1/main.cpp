@@ -201,7 +201,7 @@ void createMenu(void) {
 	else {
 		curveTypeSubMenuID = glutCreateMenu(menu);
 		glutAddMenuEntry("Bézier", 1);
-		glutAddMenuEntry("B-Spline", 2);
+		glutAddMenuEntry("B-Spline uniforme", 2);
 
 		curveDegreeSubMenuID = glutCreateMenu(menu);
 		glutAddMenuEntry("3", 3);
@@ -275,6 +275,7 @@ void mouse(int button, int state, int x, int y) {
 		else {
 			currentCurve = new Curve();
 			currentState = NO_STATE;
+			createMenu();
 		}
 	}
 
