@@ -121,8 +121,9 @@ void menu(int option) {
 				currentState = TYPE_AND_DEGREE_ASSIGNED;
 			else if (currentState == NO_STATE)
 				currentState = DEGREE_ASSIGNED;
-			else if (currentState == CURVE_SELECTED)
-				currentState = EDITING_CONTROL_POINTS;
+			//Por enquanto essa condição está travando o programa porque não chegamos ainda a tratar esse estado! Descomentar quando for ser tratado!
+			//else if (currentState == CURVE_SELECTED)
+			//	currentState = EDITING_CONTROL_POINTS;
 			break;
 
 		case 11:
@@ -256,6 +257,10 @@ void mouse(int button, int state, int x, int y) {
 		if ((selectedCurveIndex = checkCurveHit(x, y)) != -1) {
 			currentCurve = curves.at(selectedCurveIndex);
 			currentState = CURVE_SELECTED;
+		}
+		else {
+			currentCurve = new Curve();
+			currentState = NO_STATE;
 		}
 	}
 
