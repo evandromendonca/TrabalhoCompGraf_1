@@ -17,13 +17,13 @@ void saveCurves(string fileName) {
 		for (size_t i = 0; i < curves.size(); i++) {
 			vector<Point> points = curves.at(i)->getControlPoints();
 
-			output << "BEGIN" << endl;
+			output << "BEGIN_CURVE" << endl;
 			output << curves.at(i)->getType() << endl;
 			output << curves.at(i)->getCurveDegree() << endl;
 			for (size_t j = 0; j < points.size(); j++) {
 				output << points.at(j).getX() << " " << points.at(j).getY() << endl;
 			}
-			output << "END" << endl;
+			output << "END_CURVE" << endl;
 		}
 	}
 	else
@@ -44,7 +44,7 @@ void loadCurves(string fileName) {
 		while(!input.eof()) { 
 			input >> buffer;
 
-			if (buffer == "BEGIN") {
+			if (buffer == "BEGIN_CURVE") {
 				if (currentState == WAITING_BEGIN)
 					curves.push_back(curve);
 				currentState = READING_TYPE;
@@ -63,7 +63,7 @@ void loadCurves(string fileName) {
 				currentState = READING_POINTS;
 			}
 			else if (currentState == READING_POINTS) {
-				if (buffer == "END")
+				if (buffer == "END_CURVE")
 					currentState = WAITING_BEGIN;
 				else {
 					point.setX(getValue(buffer));
@@ -213,13 +213,16 @@ void idle() {
 }
 
 void mouse(int button, int state, int x, int y) {
+	//Criando Pontos de controle iniciais da curva
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE)
 		currentCurve->addControlPoint(x, y);
-
 	if (currentState == CREATING_CURVE && currentCurve->hasAllControlPoints()) {
 		curves.push_back(currentCurve);
 		currentState = NO_STATE;
 	}
+
+	//Outros casos:
+
     
     glutPostRedisplay();
 }

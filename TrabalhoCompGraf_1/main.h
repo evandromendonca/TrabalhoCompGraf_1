@@ -50,6 +50,7 @@ int selectedCurveIndex;
 vector<Curve*> curves;
 
 //Functions
+int getValue(string);
 void saveCurves(string);
 void loadCurves(string);
 void menu(int);
