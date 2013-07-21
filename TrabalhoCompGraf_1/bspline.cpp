@@ -2,7 +2,7 @@
 
 
 BSpline::BSpline(void) {
-
+	Curve::Curve();
 }
 
 
@@ -15,7 +15,7 @@ void BSpline::draw() {
 }
 
 void BSpline::refresh() {
-	m_refreshNeeded = false;
+	m_curvePoints.clear();
 }
 
 bool BSpline::hasAllControlPoints() { 

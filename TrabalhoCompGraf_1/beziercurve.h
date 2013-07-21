@@ -18,7 +18,6 @@ protected:
 
 
 private:
-	vector<Point> m_curvePoints;
-
+	float factorial(int);
+	float combination(int, int);
 };
-

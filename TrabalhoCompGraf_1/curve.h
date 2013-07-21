@@ -4,6 +4,8 @@
 #include "point.h"
 #include <vector>
 
+#include <gl\glut.h>
+
 enum CURVE_TYPE { UNASSIGNED = 0, BEZIER = 1, BSPLINE = 2 };
 
 using namespace std;
@@ -25,14 +27,17 @@ public:
 	void setCurveDegree(int);
 	void addControlPoint(Point);
 	void addControlPoint(float, float);
+	void addCurvePoint(Point);
+	void addCurvePoint(float, float);
 
 	int getCurveDegree();
 	vector<Point> getControlPoints();
+	vector<Point> getCurvePoints();
 
 protected:
 	vector<Point> m_controlPoints;
+	vector<Point> m_curvePoints;
 	int m_curveDegree;
-	bool m_refreshNeeded;
 
 private:
 

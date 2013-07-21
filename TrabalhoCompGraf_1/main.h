@@ -6,9 +6,6 @@
 #include <fstream>
 #include <sstream>
 
-
-#include <gl\glut.h>
-
 #include "beziercurve.h"
 #include "bspline.h"
 
@@ -35,19 +32,21 @@ enum STATE {
 
 //Members
 static int window;
-STATE currentState;
 int menuID;
 int curveTypeSubMenuID;
 int curveDegreeSubMenuID;
 int curveOptionsSubMenuID;
 
+vector<Curve*> curves;
+
+STATE currentState;
+Curve *currentCurve;
+
 CURVE_TYPE typeAssigned;
 int degreeAssigned;
 
-Curve *currentCurve;
 int selectedCurveIndex;
 
-vector<Curve*> curves;
 
 //Functions
 int getValue(string);
@@ -55,6 +54,8 @@ void saveCurves(string);
 void loadCurves(string);
 void menu(int);
 void createMenu(void);
+int checkCurveHit(int, int);
+void drawControlPoints();
 
 void init();
 void idle();

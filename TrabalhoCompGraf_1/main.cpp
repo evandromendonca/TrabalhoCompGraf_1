@@ -45,8 +45,10 @@ void loadCurves(string fileName) {
 			input >> buffer;
 
 			if (buffer == "BEGIN_CURVE") {
-				if (currentState == WAITING_BEGIN)
+				if (currentState == WAITING_BEGIN) {
+					curve->refresh();
 					curves.push_back(curve);
+				}
 				currentState = READING_TYPE;
 			}
 			else if (currentState == READING_TYPE) {
@@ -75,6 +77,8 @@ void loadCurves(string fileName) {
 				}
 			}
 		}
+		curve->refresh();
+		curves.push_back(curve);
 		currentState = NO_STATE;
 		input.close();
 	}
@@ -166,6 +170,7 @@ void menu(int option) {
 			if (currentState == CURVE_SELECTED) {
 				curves.erase(curves.begin() + selectedCurveIndex);
 				currentState = NO_STATE;
+				currentCurve = new Curve();
 			}
 			break;
 	}
@@ -212,50 +217,71 @@ void idle() {
     glutPostRedisplay();
 }
 
+int checkCurveHit(int x, int y) {
+	for (size_t i = 0; i < curves.size(); i++) {
+		vector<Point> points = curves.at(i)->getCurvePoints();
+
+		for (size_t j = 0; j < points.size(); j++) {
+			if ( (x > (points.at(j).getX() - 10) && x < (points.at(j).getX() + 10)) && (y > (points.at(j).getY() - 10) && y < (points.at(j).getY() + 10)))
+				return i;
+		}
+	}
+	return -1;
+}
+
 void mouse(int button, int state, int x, int y) {
-	//Criando Pontos de controle iniciais da curva
+
+	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE)
 		currentCurve->addControlPoint(x, y);
+	
+	//Adding the curve to the list of curves if all the points are set and generating the curve points
 	if (currentState == CREATING_CURVE && currentCurve->hasAllControlPoints()) {
 		curves.push_back(currentCurve);
+		currentCurve->refresh();
 		currentState = NO_STATE;
 	}
 
-	//Outros casos:
+	//Checking selection of a curve
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (currentState == NO_STATE || currentState == CURVE_SELECTED)) {
+		if ((selectedCurveIndex = checkCurveHit(x, y)) != -1) {
+			currentCurve = curves.at(selectedCurveIndex);
+			currentState = CURVE_SELECTED;
+		}
+	}
 
-    
+	//Other cases
+
+
     glutPostRedisplay();
+}
+
+void drawControlPoints() {
+	glColor3f(1.0, 0.0, 0.0);
+
+	glBegin(GL_POINTS);
+
+	for (size_t i = 0; i < currentCurve->getControlPoints().size(); i++) {
+		glVertex2d(currentCurve->getControlPoints()[i].getX(), currentCurve->getControlPoints()[i].getY());	
+	}
+
+	glEnd();	
 }
 
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(0.0, 0.0, 1.0);
 
-	glBegin(GL_POINTS);
-
-
+	drawControlPoints();				
 	
-	vector<Point> points = currentCurve->getControlPoints();
-	for(size_t i = 0; i < points.size(); i++) {
-		glVertex2f(points.at(i).getX(), points.at(i).getY());
-	}
-
-
 	for (size_t i = 0; i < curves.size(); i++) {
-		points = curves.at(i)->getControlPoints();
-
-		for (size_t j = 0; j < points.size(); j++) {
-			glVertex2f(points.at(j).getX(), points.at(j).getY());
-		}
+		curves.at(i)->draw();
 	}
-
-	glEnd();
-
+	
 	glutSwapBuffers();
 }
 
 void init() {
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0);  
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0);  
 	glMatrixMode(GL_PROJECTION);
 	gluOrtho2D(0.0, 1024.0, 768.0, 0.0);
 	glEnable( GL_POINT_SMOOTH );
