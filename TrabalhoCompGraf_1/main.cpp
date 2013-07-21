@@ -187,35 +187,48 @@ void menu(int option) {
 }
 
 void createMenu(void) {
-	curveTypeSubMenuID = glutCreateMenu(menu);
-	glutAddMenuEntry("Bézier", 1);
-	glutAddMenuEntry("B-Spline", 2);
+	if (currentState == CURVE_SELECTED) {
+		curveOptionsSubMenuID = glutCreateMenu(menu);
+		glutAddMenuEntry("Transladar curva", 14);
+		glutAddMenuEntry("Rotacionar curva", 15);
+		glutAddMenuEntry("Escalar curva", 16);
+		glutAddMenuEntry("Excluir curva", 17);
 
-	curveDegreeSubMenuID = glutCreateMenu(menu);
-	glutAddMenuEntry("3", 3);
-	glutAddMenuEntry("4", 4);
-	glutAddMenuEntry("5", 5);
-	glutAddMenuEntry("6", 6);
-	glutAddMenuEntry("7", 7);
-	glutAddMenuEntry("8", 8);
-	glutAddMenuEntry("9", 9);
-	glutAddMenuEntry("10", 10);
+		menuID = glutCreateMenu(menu);
+		glutAddSubMenu("Opções de curva", curveOptionsSubMenuID);
+		glutAddMenuEntry("Sair", 0);
+	}
+	else {
+		curveTypeSubMenuID = glutCreateMenu(menu);
+		glutAddMenuEntry("Bézier", 1);
+		glutAddMenuEntry("B-Spline", 2);
 
-	curveOptionsSubMenuID = glutCreateMenu(menu);
-	glutAddMenuEntry("Transladar curva", 14);
-	glutAddMenuEntry("Rotacionar curva", 15);
-	glutAddMenuEntry("Escalar curva", 16);
-	glutAddMenuEntry("Excluir curva", 17);
+		curveDegreeSubMenuID = glutCreateMenu(menu);
+		glutAddMenuEntry("3", 3);
+		glutAddMenuEntry("4", 4);
+		glutAddMenuEntry("5", 5);
+		glutAddMenuEntry("6", 6);
+		glutAddMenuEntry("7", 7);
+		glutAddMenuEntry("8", 8);
+		glutAddMenuEntry("9", 9);
+		glutAddMenuEntry("10", 10);
+
+		curveOptionsSubMenuID = glutCreateMenu(menu);
+		glutAddMenuEntry("Transladar curva", 14);
+		glutAddMenuEntry("Rotacionar curva", 15);
+		glutAddMenuEntry("Escalar curva", 16);
+		glutAddMenuEntry("Excluir curva", 17);
 
 
-	menuID = glutCreateMenu(menu);
-	glutAddSubMenu("Escolher tipo de curva", curveTypeSubMenuID);
-	glutAddSubMenu("Escolher grau da Curva", curveDegreeSubMenuID);
-	glutAddMenuEntry("Criar curva", 11);
-	glutAddMenuEntry("Salvar curvas", 12);
-	glutAddMenuEntry("Carregar curvas", 13);
-	glutAddSubMenu("Opções de curva", curveOptionsSubMenuID);
-	glutAddMenuEntry("Sair", 0);
+		menuID = glutCreateMenu(menu);
+		glutAddSubMenu("Escolher tipo de curva", curveTypeSubMenuID);
+		glutAddSubMenu("Escolher grau da Curva", curveDegreeSubMenuID);
+		glutAddMenuEntry("Criar curva", 11);
+		glutAddMenuEntry("Salvar curvas", 12);
+		glutAddMenuEntry("Carregar curvas", 13);
+		glutAddSubMenu("Opções de curva", curveOptionsSubMenuID);
+		glutAddMenuEntry("Sair", 0);
+	}
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -257,6 +270,7 @@ void mouse(int button, int state, int x, int y) {
 		if ((selectedCurveIndex = checkCurveHit(x, y)) != -1) {
 			currentCurve = curves.at(selectedCurveIndex);
 			currentState = CURVE_SELECTED;
+			createMenu();
 		}
 		else {
 			currentCurve = new Curve();
