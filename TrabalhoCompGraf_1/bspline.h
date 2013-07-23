@@ -16,10 +16,10 @@ public:
 protected:
 
 private:
-	vector<float> knots;
+	vector<float> m_knots;
 
 	float basis(int, int, float);
-	void createKnotsVetor(int, int, int);
+	void createKnotsVector(int, int, int);
 
 };
 

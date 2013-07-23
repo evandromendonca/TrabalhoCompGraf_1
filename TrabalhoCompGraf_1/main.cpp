@@ -128,15 +128,16 @@ void menu(int option) {
 
 		case 11:
 			if (currentState == TYPE_AND_DEGREE_ASSIGNED) {
-				if (typeAssigned == BEZIER)
+				if (typeAssigned == BEZIER) {
 					currentCurve = new BezierCurve();
-				else if (typeAssigned == BSPLINE)
+					currentState = CREATING_BEZIER_CURVE;
+				}
+				else if (typeAssigned == BSPLINE) {
 					currentCurve = new BSpline();
-				else
-					currentCurve = new Curve();
+					currentState = CREATING_BSPLINE;
+				}
                 
 				currentCurve->setCurveDegree(degreeAssigned);
-				currentState = CREATING_CURVE;
 			}
 			break;
 
@@ -245,7 +246,8 @@ int checkCurveHit(int x, int y) {
 
 		for (size_t j = 0; j < points.size(); j++) {
 			//Declarei constantes só para facilitar a leitura (evandromendonca)
-			if ( (x > (points.at(j).getX() - ACCURACY_SIZE) && x < (points.at(j).getX() + ACCURACY_SIZE)) && (y > (points.at(j).getY() - ACCURACY_SIZE) && y < (points.at(j).getY() + ACCURACY_SIZE)))
+			if ( (x > (points.at(j).getX() - ACCURACY_SIZE) && x < (points.at(j).getX() + ACCURACY_SIZE)) && 
+				 (y > (points.at(j).getY() - ACCURACY_SIZE) && y < (points.at(j).getY() + ACCURACY_SIZE)) )
 				return i;
 		}
 	}
@@ -255,11 +257,11 @@ int checkCurveHit(int x, int y) {
 void mouse(int button, int state, int x, int y) {
 
 	//Creating initial control points of the curve
-	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currentState == CREATING_CURVE)
+	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (currentState == CREATING_BEZIER_CURVE || currentState == CREATING_BSPLINE))
 		currentCurve->addControlPoint(x, y);
 	
-	//Adding the curve to the list of curves if all the points are set and generating the curve points
-	if (currentState == CREATING_CURVE && currentCurve->hasAllControlPoints()) {
+	//Adding bezier curve to the list and generating curve points
+	if (currentState == CREATING_BEZIER_CURVE && currentCurve->hasAllControlPoints()) {
 		curves.push_back(currentCurve);
 		currentCurve->refresh();
 		currentState = NO_STATE;
@@ -283,6 +285,17 @@ void mouse(int button, int state, int x, int y) {
 
 
     glutPostRedisplay();
+}
+
+void keyboard(unsigned char key, int x, int y) {
+	if (key == GLUT_KEY_ENTER && currentState == CREATING_BSPLINE) {
+		currentCurve->refresh();
+
+		if (currentCurve->hasAllControlPoints()) {
+			curves.push_back(currentCurve);
+			currentState = NO_STATE;
+		}
+	}
 }
 
 void drawControlPoints() {
@@ -348,6 +361,7 @@ int main(int argc, char **argv) {
 	//Setting function callbacks
     glutDisplayFunc(display);   
 	glutMouseFunc(mouse);
+	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 
 	//Starting the Glut main loop
