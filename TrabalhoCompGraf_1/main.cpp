@@ -299,9 +299,7 @@ void drawControlPoints() {
 }
 
 void display(void) {
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	drawControlPoints();				
+	glClear(GL_COLOR_BUFFER_BIT);				
 	
 	for (size_t i = 0; i < curves.size(); i++) {
 		if (selectedCurveIndex == i)
@@ -309,6 +307,8 @@ void display(void) {
 		else
 			curves.at(i)->draw(COLOR_GREEN);
 	}
+
+	drawControlPoints();
 	
 	glutSwapBuffers();
 }
