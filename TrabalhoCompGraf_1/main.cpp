@@ -327,7 +327,7 @@ void display(void) {
 }
 
 void init() {
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0);  
+	glClearColor(COLOR_WHITE, 0.0);  
 	glMatrixMode(GL_PROJECTION);
 	gluOrtho2D(0.0, 1024.0, 768.0, 0.0);
 	glEnable( GL_POINT_SMOOTH );

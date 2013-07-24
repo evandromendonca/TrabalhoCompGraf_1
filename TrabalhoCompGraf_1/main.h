@@ -18,6 +18,7 @@ using namespace std;
 #define COLOR_RED 1.0, 0.0, 0.0
 #define COLOR_GREEN 0.0, 1.0, 0.0
 #define COLOR_BLUE 0.0, 0.0, 1.0
+#define COLOR_WHITE 1.0, 1.0, 1.0
 #define GLUT_KEY_ENTER 13
 
 
