@@ -1,28 +1,26 @@
 #include "main.h"
 #include "eventhandler.h"
 
+/* Construction */
 Main* Main::m_instance = NULL;
-Curve* Main::m_pCurrentCurve = NULL;
-STATE Main::m_currentState = NO_STATE;
-int Main::m_selectedCurveIndex = -1;
-int Main::m_menuID = -1;
-int Main::m_curveTypeSubMenuID = -1;
-int Main::m_curveDegreeSubMenuID = -1;
-int Main::m_curveOptionsSubMenuID = -1;
-int Main::m_degreeAssigned = -1;
-CURVE_TYPE Main::m_typeAssigned = UNASSIGNED;
 
 Main::Main() {
 
 }
+/* Construction */
 
+
+/* Singleton */
 Main* Main::getInstance() {
 	if (!m_instance)
 		m_instance = new Main();
 
 	return m_instance;
 }
+/* Singleton */
 
+
+/* Curve Vector */
 vector<Curve*> Main::getCurves() {
 	return m_curves;
 }
@@ -38,7 +36,10 @@ void Main::setCurves(vector<Curve*> curves) {
 		m_curves.push_back(curves.at(i));
 	}
 }
+/* Curve Vector */
 
+
+/* Current State */
 STATE Main::getState() {
 	return m_currentState;
 }
@@ -46,7 +47,70 @@ STATE Main::getState() {
 void Main::setState(STATE currentState) {
 	m_currentState = currentState;
 }
+/* Current State */
 
+
+/* Current Curve */
+Curve* Main::getCurrentCurve() {
+	return m_pCurrentCurve;
+}
+
+void Main::setCurrentCurve(Curve *curve) {
+	m_pCurrentCurve = curve;
+}
+
+void Main::addPointToCurrentCurve(Point point) {
+	m_pCurrentCurve->addControlPoint(point);
+}
+
+void Main::addPointToCurrentCurve(float x, float y) {
+	m_pCurrentCurve->addControlPoint(x, y);
+}
+
+void Main::setCurrentCurveDegree(int assignedDegree) {
+	m_pCurrentCurve->setCurveDegree(assignedDegree);
+}
+
+void Main::refreshCurrentCurve() {
+	m_pCurrentCurve->refresh();
+}
+/* Current Curve */
+
+
+/* Selected Curve */
+int Main::getSelectedCurve() {
+	return m_selectedCurve;
+}
+
+void Main::setSelectedCurve(int selectedCurve) {
+	m_selectedCurve = selectedCurve;
+}
+/* Selected Curve */
+
+
+/* Assigned Type */
+CURVE_TYPE Main::getAssignedType() {
+	return m_assignedType;
+}
+
+void Main::setAssignedType(CURVE_TYPE assignedType) {
+	m_assignedType = assignedType;
+}
+/* Assigned Type */
+
+
+/* Assigned Degree */
+int Main::getAssignedDegree() {
+	return m_assignedDegree;
+}
+
+void Main::setAssignedDegree(int assignedDegree) {
+	m_assignedDegree = assignedDegree;
+}
+/* Assigned Degree */
+
+
+/* Menu */
 void Main::createMenu(void) {
 	if (m_currentState == CURVE_SELECTED) {
 		m_curveOptionsSubMenuID = glutCreateMenu(menu);
@@ -93,14 +157,18 @@ void Main::createMenu(void) {
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
+/* Menu */
 
-void Main::run(int argc, char **argv) {
+
+/* Run */
+int Main::run(int argc, char **argv) {
 	//Initializing Main class members
 	m_currentState = NO_STATE;
 	m_pCurrentCurve = new Curve();
-	m_selectedCurveIndex = -1;
-	m_typeAssigned = UNASSIGNED;
-	m_degreeAssigned = -1;
+	m_selectedCurve = -1;
+	m_assignedDegree = -1;
+	m_assignedType = UNASSIGNED;
+	
 
 	//Initializing Glut
     glutInit(&argc, argv);
@@ -131,12 +199,15 @@ void Main::run(int argc, char **argv) {
 
 	//Starting the Glut main loop
 	glutMainLoop();
-}
 
+	return EXIT_SUCCESS;
+}
+/* Run */
+
+
+/* Main */
 int main(int argc, char **argv) {
-	//Start running the program
-	Main::getInstance()->run(argc, argv);
-
-	//if everything runs correctly, exit with success code (0)
-    exit(EXIT_SUCCESS);
+	//Runs the program and exits at the end with success code if everything worked
+    exit(Main::getInstance()->run(argc, argv));
 }
+/* Main */

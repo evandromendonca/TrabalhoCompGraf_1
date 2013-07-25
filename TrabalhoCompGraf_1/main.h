@@ -5,22 +5,10 @@
 class Main
 {
 
-public members:
-	static Curve *m_pCurrentCurve;
-	static STATE m_currentState;
-	static CURVE_TYPE m_typeAssigned;
-	static int m_degreeAssigned;
-	static int m_selectedCurveIndex;
-	static int m_menuID;
-	static int m_curveTypeSubMenuID;
-	static int m_curveDegreeSubMenuID;
-	static int m_curveOptionsSubMenuID;
-
 public functions:
 	Main(void);
 	static Main* getInstance();
-	void run(int, char**);
-	void initialize();
+	int run(int, char**);
 
 	vector<Curve*> getCurves();
 	void setCurves(vector<Curve*>);
@@ -29,11 +17,39 @@ public functions:
 	STATE getState();
 	void setState(STATE);
 
+	Curve* getCurrentCurve();
+	void setCurrentCurve(Curve*);
+	void addPointToCurrentCurve(Point);
+	void addPointToCurrentCurve(float, float);
+	void setCurrentCurveDegree(int);
+	void refreshCurrentCurve();
+
+	int getSelectedCurve();
+	void setSelectedCurve(int);
+
+	int getAssignedDegree();
+	void setAssignedDegree(int);
+
+	CURVE_TYPE getAssignedType();
+	void setAssignedType(CURVE_TYPE);
+
 	void createMenu();
 
 private members:
 	static Main *m_instance;
-	int m_window;
 	vector<Curve*> m_curves;
+
+	STATE m_currentState;
+	Curve *m_pCurrentCurve;
+	int m_selectedCurve;
+
+	int m_window;
+	int m_menuID;
+	int m_curveTypeSubMenuID;
+	int m_curveDegreeSubMenuID;
+	int m_curveOptionsSubMenuID;
+
+	int m_assignedDegree;
+	CURVE_TYPE m_assignedType;
 
 };

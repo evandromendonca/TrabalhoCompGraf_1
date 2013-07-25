@@ -29,24 +29,26 @@ void mouse(int button, int state, int x, int y) {
 
 	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == CREATING_BEZIER_CURVE || main->getState() == CREATING_BSPLINE))
-		Main::m_pCurrentCurve->addControlPoint(x, y);
+		main->addPointToCurrentCurve(x, y);
 	
 	//Adding bezier curve to the list and generating curve points
-	if (main->getState() == CREATING_BEZIER_CURVE && Main::m_pCurrentCurve->hasAllControlPoints()) {
-		main->addCurve(Main::m_pCurrentCurve);
-		Main::m_pCurrentCurve->refresh();
+	if (main->getState() == CREATING_BEZIER_CURVE && main->getCurrentCurve()->hasAllControlPoints()) {
+		main->refreshCurrentCurve();
+		main->addCurve(main->getCurrentCurve());
 		main->setState(NO_STATE);
 	}
 
 	//Checking selection of a curve
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED)) {
-		if ((Main::m_selectedCurveIndex = checkCurveHit(x, y)) != -1) {
-			Main::m_pCurrentCurve = main->getCurves().at(Main::m_selectedCurveIndex);
+		main->setSelectedCurve(checkCurveHit(x, y));
+
+		if ( main->getSelectedCurve() != -1) {
+			main->setCurrentCurve(main->getCurves().at(main->getSelectedCurve()));
 			main->setState(CURVE_SELECTED);
 			main->createMenu();
 		}
 		else {
-			Main::m_pCurrentCurve = new Curve();
+			main->setCurrentCurve(new Curve());
 			main->setState(NO_STATE);
 			main->createMenu();
 		}
@@ -63,9 +65,11 @@ void drawControlPoints() {
 
 	glBegin(GL_POINTS);
 
+	vector<Point> points = Main::getInstance()->getCurrentCurve()->getControlPoints();
+
 	//Draw only the control points of the current curve
-	for (size_t i = 0; i < Main::m_pCurrentCurve->getControlPoints().size(); i++) {
-		glVertex2d(Main::m_pCurrentCurve->getControlPoints()[i].getX(), Main::m_pCurrentCurve->getControlPoints()[i].getY());	
+	for (size_t i = 0; i < points.size(); i++) {
+		glVertex2d(points[i].getX(), points[i].getY());	
 	}
 
 	glEnd();	
@@ -79,7 +83,7 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);				
 	
 	for (size_t i = 0; i < curves.size(); i++) {
-		if (Main::m_selectedCurveIndex == i)
+		if (main->getSelectedCurve() == i)
 			curves.at(i)->draw(COLOR_RED);
 		else
 			curves.at(i)->draw(COLOR_GREEN);
@@ -94,10 +98,10 @@ void display(void) {
 void keyboard(unsigned char key, int x, int y) {
 	Main *main = Main::getInstance();
 	if (key == GLUT_KEY_ENTER && main->getState() == CREATING_BSPLINE) {
-		Main::m_pCurrentCurve->refresh();
+		main->refreshCurrentCurve();
 
-		if (Main::m_pCurrentCurve->hasAllControlPoints()) {
-			main->addCurve(Main::m_pCurrentCurve);
+		if (main->getCurrentCurve()->hasAllControlPoints()) {
+			main->addCurve(main->getCurrentCurve());
 			Main::getInstance()->setState(NO_STATE);
 			
 		}
@@ -116,7 +120,7 @@ void menu(int option) {
 
 		case 1:
 		case 2:
-			Main::m_typeAssigned = (CURVE_TYPE)option;
+			main->setAssignedType((CURVE_TYPE)option);
 			if (main->getState() == NO_STATE)
 				main->setState(TYPE_ASSIGNED);
 			else if (main->getState() == DEGREE_ASSIGNED)
@@ -131,7 +135,7 @@ void menu(int option) {
 		case 8:
 		case 9:
 		case 10:
-			Main::m_degreeAssigned = option;
+			main->setAssignedDegree(option);
 			if (main->getState() == TYPE_ASSIGNED)
 				main->setState(TYPE_AND_DEGREE_ASSIGNED);
 			else if (main->getState() == NO_STATE)
@@ -143,16 +147,16 @@ void menu(int option) {
 
 		case 11:
 			if (main->getState() == TYPE_AND_DEGREE_ASSIGNED) {
-				if (Main::m_typeAssigned == BEZIER) {
-					Main::m_pCurrentCurve = new BezierCurve();
+				if (main->getAssignedType() == BEZIER) {
+					main->setCurrentCurve(new BezierCurve());
 					main->setState(CREATING_BEZIER_CURVE);
 				}
-				else if (Main::m_typeAssigned == BSPLINE) {
-					Main::m_pCurrentCurve = new BSpline();
+				else if (main->getAssignedType() == BSPLINE) {
+					main->setCurrentCurve(new BSpline());
 					main->setState(CREATING_BSPLINE);
 				}
                 
-				Main::m_pCurrentCurve->setCurveDegree(Main::m_degreeAssigned);
+				main->setCurrentCurveDegree(main->getAssignedDegree());
 			}
 			break;
 
@@ -193,10 +197,10 @@ void menu(int option) {
 		case 17:
 			if (main->getState() == CURVE_SELECTED) {
 				vector<Curve*> curves = main->getCurves();
-				curves.erase(curves.begin() + Main::m_selectedCurveIndex);
+				curves.erase(curves.begin() + main->getSelectedCurve());
 				main->setCurves(curves);
 				main->setState(NO_STATE);
-				Main::m_pCurrentCurve = new Curve();
+				main->setCurrentCurve(new Curve());
 			}
 			break;
 	}
