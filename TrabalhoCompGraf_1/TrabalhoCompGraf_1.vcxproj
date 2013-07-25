@@ -85,6 +85,8 @@
     <ClCompile Include="beziercurve.cpp" />
     <ClCompile Include="bspline.cpp" />
     <ClCompile Include="curve.cpp" />
+    <ClCompile Include="eventhandler.cpp" />
+    <ClCompile Include="filehandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point.cpp" />
   </ItemGroup>
@@ -92,8 +94,11 @@
     <ClInclude Include="beziercurve.h" />
     <ClInclude Include="bspline.h" />
     <ClInclude Include="curve.h" />
+    <ClInclude Include="eventhandler.h" />
+    <ClInclude Include="filehandler.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

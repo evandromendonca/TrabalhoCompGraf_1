@@ -19,7 +19,7 @@ private:
 	vector<float> m_knots;
 
 	float basis(int, int, float);
-	void createKnotsVector(int, int, int);
+	void createKnotsVector(int, int, size_t);
 
 };
 

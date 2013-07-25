@@ -1,75 +1,39 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include "curve.h"
 
-#include "beziercurve.h"
-#include "bspline.h"
+class Main
+{
 
-using namespace std;
+public members:
+	static Curve *m_pCurrentCurve;
+	static STATE m_currentState;
+	static CURVE_TYPE m_typeAssigned;
+	static int m_degreeAssigned;
+	static int m_selectedCurveIndex;
+	static int m_menuID;
+	static int m_curveTypeSubMenuID;
+	static int m_curveDegreeSubMenuID;
+	static int m_curveOptionsSubMenuID;
 
-//Constants
-#define ACCURACY_SIZE 10
+public functions:
+	Main(void);
+	static Main* getInstance();
+	void run(int, char**);
+	void initialize();
 
-//Fiquei na duvida se era melhor fazer um struct de cor, ou deixar em constantes, fica para vc decidir Luís
-#define COLOR_RED 1.0, 0.0, 0.0
-#define COLOR_GREEN 0.0, 1.0, 0.0
-#define COLOR_BLUE 0.0, 0.0, 1.0
-#define COLOR_WHITE 1.0, 1.0, 1.0
-#define GLUT_KEY_ENTER 13
+	vector<Curve*> getCurves();
+	void setCurves(vector<Curve*>);
+	void addCurve(Curve*);
 
+	STATE getState();
+	void setState(STATE);
 
-enum STATE {
-	NO_STATE = 0,
-    TYPE_ASSIGNED,
-    DEGREE_ASSIGNED,
-    TYPE_AND_DEGREE_ASSIGNED,
-	CURVE_SELECTED,
-	EDITING_CONTROL_POINTS,
-	CREATING_BEZIER_CURVE,
-	CREATING_BSPLINE,
-	SCALING_CURVE,
-	TRANSLATING_CURVE,
-	ROTATING_CURVE,
-	WAITING_BEGIN,
-	READING_TYPE,
-	READING_DEGREE,
-	READING_POINTS,
-}; 
+	void createMenu();
 
+private members:
+	static Main *m_instance;
+	int m_window;
+	vector<Curve*> m_curves;
 
-//Members
-static int window;
-int menuID;
-int curveTypeSubMenuID;
-int curveDegreeSubMenuID;
-int curveOptionsSubMenuID;
-
-vector<Curve*> curves;
-
-STATE currentState;
-Curve *currentCurve;
-
-CURVE_TYPE typeAssigned;
-int degreeAssigned;
-
-int selectedCurveIndex;
-
-
-//Functions
-int getValue(string);
-bool saveCurves(string);
-bool loadCurves(string);
-void menu(int);
-void createMenu(void);
-int checkCurveHit(int, int);
-void drawControlPoints();
-
-void init();
-void idle();
-void mouse();
-void display(void);
-
+};

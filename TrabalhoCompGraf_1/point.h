@@ -23,4 +23,3 @@ private:
 	float m_y;
 
 };
-

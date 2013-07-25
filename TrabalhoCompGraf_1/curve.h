@@ -1,14 +1,8 @@
 #pragma once
 
-
+#include "types.h"
 #include "point.h"
-#include <vector>
 
-#include <gl\GLUT.h>
-
-enum CURVE_TYPE { UNASSIGNED = 0, BEZIER = 1, BSPLINE = 2 };
-
-using namespace std;
 
 class Curve
 {
