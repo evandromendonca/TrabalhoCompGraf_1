@@ -183,8 +183,10 @@ void menu(int option) {
 			else if (main->getState() == NO_STATE)
 				main->setState(DEGREE_ASSIGNED);
 			//Por enquanto essa condição está travando o programa porque não chegamos ainda a tratar esse estado! Descomentar quando for ser tratado!
-			//else if (main->getState() == CURVE_SELECTED)
-			//	main->setState(EDITING_CONTROL_POINTS;
+			//else if (main->getState() == CURVE_SELECTED) {
+			//	main->setState(EDITING_CONTROL_POINTS);
+			//	main->setCurrentCurveDegree(option);
+			//}
 			break;
 
 		case 11:
