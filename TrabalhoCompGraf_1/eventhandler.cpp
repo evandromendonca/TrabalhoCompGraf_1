@@ -6,6 +6,18 @@
 
 #include <iostream>
 
+//Control Point Selection
+int checkControlPointHit(int x, int y) {
+	vector<Point> points = Main::getInstance()->getCurrentCurve()->getControlPoints();
+
+	for (size_t i = 0; i < points.size(); i++) {
+		if ( (x > (points.at(i).getX() - CURVE_ACCURACY_SIZE) && x < (points.at(i).getX() + CURVE_ACCURACY_SIZE)) && 
+				 (y > (points.at(i).getY() - CURVE_ACCURACY_SIZE) && y < (points.at(i).getY() + CURVE_ACCURACY_SIZE)) )
+				 return i;
+	}
+	return -1;
+}
+
 //Curve Selection
 int checkCurveHit(int x, int y) {
 	vector<Curve*> curves = Main::getInstance()->getCurves();
@@ -15,8 +27,8 @@ int checkCurveHit(int x, int y) {
 
 		for (size_t j = 0; j < points.size(); j++) {
 			//Declarei constantes só para facilitar a leitura (evandromendonca)
-			if ( (x > (points.at(j).getX() - ACCURACY_SIZE) && x < (points.at(j).getX() + ACCURACY_SIZE)) && 
-				 (y > (points.at(j).getY() - ACCURACY_SIZE) && y < (points.at(j).getY() + ACCURACY_SIZE)) )
+			if ( (x > (points.at(j).getX() - CURVE_ACCURACY_SIZE) && x < (points.at(j).getX() + CURVE_ACCURACY_SIZE)) && 
+				 (y > (points.at(j).getY() - CURVE_ACCURACY_SIZE) && y < (points.at(j).getY() + CURVE_ACCURACY_SIZE)) )
 				return i;
 		}
 	}
@@ -39,7 +51,7 @@ void mouse(int button, int state, int x, int y) {
 	}
 
 	//Checking selection of a curve
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED)) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED)) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
 		if ( main->getSelectedCurve() != -1) {
@@ -54,8 +66,37 @@ void mouse(int button, int state, int x, int y) {
 		}
 	}
 
+	//Stop the motion of the control point
+	if (main->getState() == MOVING_CONTROL_POINTS) {
+		main->setState(CURVE_SELECTED);
+	}
+
 	//Other cases
     glutPostRedisplay();
+}
+
+//Mouse Motion Event
+void mouseMotion(int x, int y) {
+	Main *main = Main::getInstance();
+
+	if (main->getState() == CURVE_SELECTED) {
+		main->setSelectedPoint(checkControlPointHit(x, y));
+
+		if (main->getSelectedPoint() != -1) {
+			main->setState(MOVING_CONTROL_POINTS);
+		}
+	}
+
+	else if (main->getState() == MOVING_CONTROL_POINTS) {
+		Curve *curve = main->getCurrentCurve();
+		vector<Point> points = curve->getControlPoints();
+
+		points.at(main->getSelectedPoint()).setPosition(x, y);
+		curve->refresh();
+		curve->setControlPoints(points);
+		main->setCurrentCurve(curve);
+	}
+	glutPostRedisplay();
 }
 
 
@@ -106,6 +147,7 @@ void keyboard(unsigned char key, int x, int y) {
 			
 		}
 	}
+
 	glutPostRedisplay();
 }
 

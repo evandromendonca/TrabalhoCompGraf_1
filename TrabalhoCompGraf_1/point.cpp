@@ -22,6 +22,11 @@ Point& Point::operator=(const Point &src) {
 	return *this;
 }
 
+void Point::setPosition(float x, float y) {
+	m_x = x;
+	m_y = y;
+}
+
 void Point::setX(float x) {
 	m_x = x;
 }

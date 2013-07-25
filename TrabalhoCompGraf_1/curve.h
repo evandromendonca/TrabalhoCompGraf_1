@@ -19,6 +19,9 @@ public:
 
 	void draw(GLfloat, GLfloat, GLfloat);
 	void setCurveDegree(int);
+
+	void setControlPoints(vector<Point> points);
+
 	void addControlPoint(Point);
 	void addControlPoint(float, float);
 	void addCurvePoint(Point);

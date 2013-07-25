@@ -55,6 +55,14 @@ void Curve::addControlPoint(float x, float y) {
 	m_controlPoints.push_back(Point(x, y));
 }
 
+void Curve::setControlPoints(vector<Point> points) {
+	m_controlPoints.clear();
+
+	for (size_t i = 0; i < points.size(); i++) {
+		m_controlPoints.push_back(points.at(i));
+	}
+}
+
 void Curve::addCurvePoint(Point point) {
 	m_curvePoints.push_back(point);
 }

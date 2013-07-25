@@ -10,6 +10,8 @@ public:
 
 	Point& operator=(const Point&);
 
+	void Point::setPosition(float x, float y);
+
 	void setX(float);
 	void setY(float);
 

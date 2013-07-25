@@ -27,6 +27,9 @@ public functions:
 	int getSelectedCurve();
 	void setSelectedCurve(int);
 
+	int getSelectedPoint();
+	void setSelectedPoint(int);
+
 	int getAssignedDegree();
 	void setAssignedDegree(int);
 
@@ -42,6 +45,7 @@ private members:
 	STATE m_currentState;
 	Curve *m_pCurrentCurve;
 	int m_selectedCurve;
+	int m_selectedPoint;
 
 	int m_window;
 	int m_menuID;

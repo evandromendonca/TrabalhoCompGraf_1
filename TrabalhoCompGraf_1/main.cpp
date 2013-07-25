@@ -87,6 +87,16 @@ void Main::setSelectedCurve(int selectedCurve) {
 }
 /* Selected Curve */
 
+/* Selected Point */
+int Main::getSelectedPoint() {
+	return m_selectedPoint;
+}
+
+void Main::setSelectedPoint(int selectedPoint) {
+	m_selectedPoint = selectedPoint;
+}
+/* Selected Curve */
+
 
 /* Assigned Type */
 CURVE_TYPE Main::getAssignedType() {
@@ -194,6 +204,7 @@ int Main::run(int argc, char **argv) {
 
 	//Setting Glut function callbacks
 	glutMouseFunc(mouse);
+	glutMotionFunc(mouseMotion);
 	glutDisplayFunc(display);  
 	glutKeyboardFunc(keyboard);
 
