@@ -23,6 +23,7 @@ using namespace std;
 #define COLOR_BLACK 0.0, 0.0, 0.0
 #define COLOR_WHITE 1.0, 1.0, 1.0
 
+#define GL_WINDOW_SIZE 1024, 768
 #define GL_SCREEN 0.0, 1024.0, 768.0, 0.0
 
 

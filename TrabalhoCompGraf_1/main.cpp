@@ -186,7 +186,7 @@ int Main::run(int argc, char **argv) {
 	//Preparing Glut environment
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(1024, 768);
+	glutInitWindowSize(GL_WINDOW_SIZE);
 
 	//Creating Glut window
 	m_window = glutCreateWindow("Computação Gráfica - Trabalho 1");

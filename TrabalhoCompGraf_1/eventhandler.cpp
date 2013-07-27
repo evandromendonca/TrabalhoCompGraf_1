@@ -82,11 +82,9 @@ void mouseMotion(int x, int y) {
 	if (main->getState() == CURVE_SELECTED) {
 		main->setSelectedPoint(checkControlPointHit(x, y));
 
-		if (main->getSelectedPoint() != -1) {
+		if (main->getSelectedPoint() != -1) 
 			main->setState(MOVING_CONTROL_POINTS);
-		}
 	}
-
 	else if (main->getState() == MOVING_CONTROL_POINTS) {
 		Curve *curve = main->getCurrentCurve();
 		vector<Point> points = curve->getControlPoints();
@@ -96,6 +94,19 @@ void mouseMotion(int x, int y) {
 		curve->setControlPoints(points);
 		main->setCurrentCurve(curve);
 	}
+	
+	if (main->getState() == TRANSLATING_CURVE) {
+		
+	}
+
+	if (main->getState() == ROTATING_CURVE) {
+		
+	}
+
+	if (main->getState() == SCALING_CURVE) {
+		
+	}
+
 	glutPostRedisplay();
 }
 
