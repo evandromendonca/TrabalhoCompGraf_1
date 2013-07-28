@@ -1,6 +1,5 @@
-#pragma once
-
 #include "types.h"
+
 
 functions
 	int checkControlPointHit(int x, int y);
@@ -14,3 +13,5 @@ functions
 	void keyboard(unsigned char, int, int);
 
 	void menu(int);
+
+

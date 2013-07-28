@@ -4,20 +4,19 @@
 #include "bspline.h"
 #include "main.h"
 
+
 #include <iostream>
 
-//Nao consegui criar no .h, nao entendi mt bem como funciona, e nao quero perder meu tempo com isso, depois  vc me explica =)
 int mouseDownPosX;
 int mouseDownPosY;
-
 
 //Control Point Selection
 int checkControlPointHit(int x, int y) {
 	vector<Point> points = Main::getInstance()->getCurrentCurve()->getControlPoints();
 
 	for (size_t i = 0; i < points.size(); i++) {
-		if ( (x > (points.at(i).getX() - CURVE_ACCURACY_SIZE) && x < (points.at(i).getX() + CURVE_ACCURACY_SIZE)) && 
-				 (y > (points.at(i).getY() - CURVE_ACCURACY_SIZE) && y < (points.at(i).getY() + CURVE_ACCURACY_SIZE)) )
+		if ( (x > (points.at(i).getX() - POINT_ACCURACY_SIZE) && x < (points.at(i).getX() + POINT_ACCURACY_SIZE)) && 
+				 (y > (points.at(i).getY() - POINT_ACCURACY_SIZE) && y < (points.at(i).getY() + POINT_ACCURACY_SIZE)) )
 				 return i;
 	}
 	return -1;
@@ -177,6 +176,7 @@ void display(void) {
 //Keyboard Event
 void keyboard(unsigned char key, int x, int y) {
 	Main *main = Main::getInstance();
+
 	if (key == GLUT_KEY_ENTER && main->getState() == CREATING_BSPLINE) {
 		main->refreshCurrentCurve();
 
@@ -185,6 +185,13 @@ void keyboard(unsigned char key, int x, int y) {
 			Main::getInstance()->setState(NO_STATE);
 			
 		}
+	}
+
+	if (key == GLUT_KEY_ENTER && main->getState() == CURVE_SELECTED) {
+		main->setSelectedCurve(-1);
+		main->setCurrentCurve(new Curve());
+		main->setState(NO_STATE);
+		main->createMenu();
 	}
 
 	glutPostRedisplay();
