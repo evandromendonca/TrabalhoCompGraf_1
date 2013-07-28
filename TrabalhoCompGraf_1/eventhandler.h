@@ -8,6 +8,7 @@ functions
 	void mouseMotion(int, int);
 
 	void drawControlPoints();
+	void drawReferencialLines();
 	void display(void);
 
 	void keyboard(unsigned char, int, int);

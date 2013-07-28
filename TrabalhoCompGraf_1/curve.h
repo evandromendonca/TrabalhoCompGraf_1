@@ -27,6 +27,10 @@ public:
 	void addCurvePoint(Point);
 	void addCurvePoint(float, float);
 
+	void translateCurve(Point mouseMoveDistance);
+	void rotateCurve(Point mouseMoveDistance);
+	void escaleCurve(Point mouseMoveDistance);
+
 	int getCurveDegree();
 	vector<Point> getControlPoints();
 	vector<Point> getCurvePoints();

@@ -14,8 +14,8 @@ int checkControlPointHit(int x, int y) {
 
 	for (size_t i = 0; i < points.size(); i++) {
 		if ( (x > (points.at(i).getX() - POINT_ACCURACY_SIZE) && x < (points.at(i).getX() + POINT_ACCURACY_SIZE)) && 
-				 (y > (points.at(i).getY() - POINT_ACCURACY_SIZE) && y < (points.at(i).getY() + POINT_ACCURACY_SIZE)) )
-				 return i;
+			(y > (points.at(i).getY() - POINT_ACCURACY_SIZE) && y < (points.at(i).getY() + POINT_ACCURACY_SIZE)) )
+			return i;
 	}
 	return -1;
 }
@@ -23,14 +23,14 @@ int checkControlPointHit(int x, int y) {
 //Curve Selection
 int checkCurveHit(int x, int y) {
 	vector<Curve*> curves = Main::getInstance()->getCurves();
-	
+
 	for (size_t i = 0; i < curves.size(); i++) {
 		vector<Point> points = curves.at(i)->getCurvePoints();
 
 		for (size_t j = 0; j < points.size(); j++) {
 			//Declarei constantes só para facilitar a leitura (evandromendonca)
 			if ( (x > (points.at(j).getX() - CURVE_ACCURACY_SIZE) && x < (points.at(j).getX() + CURVE_ACCURACY_SIZE)) && 
-				 (y > (points.at(j).getY() - CURVE_ACCURACY_SIZE) && y < (points.at(j).getY() + CURVE_ACCURACY_SIZE)) )
+				(y > (points.at(j).getY() - CURVE_ACCURACY_SIZE) && y < (points.at(j).getY() + CURVE_ACCURACY_SIZE)) )
 				return i;
 		}
 	}
@@ -48,7 +48,7 @@ void mouse(int button, int state, int x, int y) {
 	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == CREATING_BEZIER_CURVE || main->getState() == CREATING_BSPLINE))
 		main->addPointToCurrentCurve(x, y);
-	
+
 	//Adding bezier curve to the list and generating curve points
 	if (main->getState() == CREATING_BEZIER_CURVE && main->getCurrentCurve()->hasAllControlPoints()) {
 		main->refreshCurrentCurve();
@@ -78,12 +78,12 @@ void mouse(int button, int state, int x, int y) {
 	}
 
 	//Other cases
-    glutPostRedisplay();
+	glutPostRedisplay();
 }
 
 //Mouse Motion Event
 void mouseMotion(int x, int y) {
-	
+
 	//Generating mouse move distance
 	Point mouseMoveDistance = Point(x - mouseLastPosition.getX(), y - mouseLastPosition.getY());
 
@@ -105,42 +105,20 @@ void mouseMotion(int x, int y) {
 		curve->setControlPoints(points);
 		main->setCurrentCurve(curve);
 	}
-	
+
 	//Translating Curve
 	if (main->getState() == TRANSLATING_CURVE) {
-		Curve *curve = main->getCurrentCurve();
-		vector<Point> points = curve->getControlPoints();
-
-		for (size_t i = 0; i < points.size() ; i++)
-		{
-			points.at(i).setX( (int)points.at(i).getX() + mouseMoveDistance.getX() ); 
-			points.at(i).setY( (int)points.at(i).getY() + mouseMoveDistance.getY() );
-		}
-
-		curve->setControlPoints(points);
-		curve->refresh();
-		main->setCurrentCurve(curve);
+		main->getCurrentCurve()->translateCurve(mouseMoveDistance);
 	}
 
 	//Rotating Curve
 	if (main->getState() == ROTATING_CURVE) {
-		Curve *curve = main->getCurrentCurve();
-		vector<Point> points = curve->getControlPoints();
-
-		for (size_t i = 0; i < points.size() ; i++)
-		{
-			points.at(i).setX( points.at(i).getX() * cos((mouseMoveDistance.getX()/180)*PI) - points.at(i).getY() * sin((mouseMoveDistance.getX()/180)*PI) ); 
-			points.at(i).setY( points.at(i).getX() * sin((mouseMoveDistance.getX()/180)*PI) + points.at(i).getY() * cos((mouseMoveDistance.getX()/180)*PI) );
-		}
-
-		curve->setControlPoints(points);
-		curve->refresh();
-		main->setCurrentCurve(curve);
+		main->getCurrentCurve()->rotateCurve(mouseMoveDistance);		
 	}
 
 	//Scaling Curve
 	if (main->getState() == SCALING_CURVE) {
-		
+		main->getCurrentCurve()->escaleCurve(mouseMoveDistance);
 	}
 
 	//Set MouseLastPosition
@@ -166,13 +144,28 @@ void drawControlPoints() {
 	glEnd();	
 }
 
+void drawReferencialLines() {
+	glColor3f(COLOR_WHITE);
+	glBegin(GL_LINES);
+	
+	// Ver como pegar por variaveis o tamanho da janela para fazer essa contas
+	glVertex2f(1024/2, 0);
+	glVertex2f(1024/2, 768);
+	glVertex2f(0, 768/2);
+	glVertex2f(1024, 768/2);
+	glEnd();
+}
+
 //Display Event
 void display(void) {
 	Main *main = Main::getInstance();
 	vector<Curve*> curves = main->getCurves();
 
-	glClear(GL_COLOR_BUFFER_BIT);				
-	
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (main->getState() == ROTATING_CURVE)
+		drawReferencialLines();
+
 	for (size_t i = 0; i < curves.size(); i++) {
 		if (main->getSelectedCurve() == i)
 			curves.at(i)->draw(COLOR_RED);
@@ -181,7 +174,7 @@ void display(void) {
 	}
 
 	drawControlPoints();
-	
+
 	glutSwapBuffers();
 }
 
@@ -195,7 +188,7 @@ void keyboard(unsigned char key, int x, int y) {
 		if (main->getCurrentCurve()->hasAllControlPoints()) {
 			main->addCurve(main->getCurrentCurve());
 			Main::getInstance()->setState(NO_STATE);
-			
+
 		}
 	}
 
@@ -214,97 +207,97 @@ void menu(int option) {
 	Main *main = Main::getInstance();
 
 	switch(option) {
-		case 0:
-			exit(EXIT_SUCCESS);
-			break;
+	case 0:
+		exit(EXIT_SUCCESS);
+		break;
 
-		case 1:
-		case 2:
-			main->setAssignedType((CURVE_TYPE)option);
-			if (main->getState() == NO_STATE)
-				main->setState(TYPE_ASSIGNED);
-			else if (main->getState() == DEGREE_ASSIGNED)
-				main->setState(TYPE_AND_DEGREE_ASSIGNED);
-			break;
+	case 1:
+	case 2:
+		main->setAssignedType((CURVE_TYPE)option);
+		if (main->getState() == NO_STATE)
+			main->setState(TYPE_ASSIGNED);
+		else if (main->getState() == DEGREE_ASSIGNED)
+			main->setState(TYPE_AND_DEGREE_ASSIGNED);
+		break;
 
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-			main->setAssignedDegree(option);
-			if (main->getState() == TYPE_ASSIGNED)
-				main->setState(TYPE_AND_DEGREE_ASSIGNED);
-			else if (main->getState() == NO_STATE)
-				main->setState(DEGREE_ASSIGNED);
-			//Por enquanto essa condição está travando o programa porque não chegamos ainda a tratar esse estado! Descomentar quando for ser tratado!
-			//else if (main->getState() == CURVE_SELECTED) {
-			//	main->setState(EDITING_CONTROL_POINTS);
-			//	main->setCurrentCurveDegree(option);
-			//}
-			break;
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+		main->setAssignedDegree(option);
+		if (main->getState() == TYPE_ASSIGNED)
+			main->setState(TYPE_AND_DEGREE_ASSIGNED);
+		else if (main->getState() == NO_STATE)
+			main->setState(DEGREE_ASSIGNED);
+		//Por enquanto essa condição está travando o programa porque não chegamos ainda a tratar esse estado! Descomentar quando for ser tratado!
+		//else if (main->getState() == CURVE_SELECTED) {
+		//	main->setState(EDITING_CONTROL_POINTS);
+		//	main->setCurrentCurveDegree(option);
+		//}
+		break;
 
-		case 11:
-			if (main->getState() == TYPE_AND_DEGREE_ASSIGNED) {
-				if (main->getAssignedType() == BEZIER) {
-					main->setCurrentCurve(new BezierCurve());
-					main->setState(CREATING_BEZIER_CURVE);
-				}
-				else if (main->getAssignedType() == BSPLINE) {
-					main->setCurrentCurve(new BSpline());
-					main->setState(CREATING_BSPLINE);
-				}
-                
-				main->setCurrentCurveDegree(main->getAssignedDegree());
+	case 11:
+		if (main->getState() == TYPE_AND_DEGREE_ASSIGNED) {
+			if (main->getAssignedType() == BEZIER) {
+				main->setCurrentCurve(new BezierCurve());
+				main->setState(CREATING_BEZIER_CURVE);
 			}
-			break;
+			else if (main->getAssignedType() == BSPLINE) {
+				main->setCurrentCurve(new BSpline());
+				main->setState(CREATING_BSPLINE);
+			}
 
-		case 12: {
-			string filename;
-			cout << "Digite o nome do arquivo onde deseja salvar as curvas: ";
-			cin >> filename;
-			saveCurves(filename) ? cout << "As curvas foram salvas com sucesso!" << endl : cout << "Houve um erro no salvamento das curvas." << endl;
-			break;
+			main->setCurrentCurveDegree(main->getAssignedDegree());
 		}
+		break;
 
-		case 13: {
-			string filename;
-			cout << "Digite o nome do arquivo de onde deseja carregar as curvas: ";
-			cin >> filename;
-			loadCurves(filename) ? cout << "As curvas foram carregadas com sucesso!" << endl : cout << "Houve um erro no carregamento das curvas." << endl;;
-			break;
+	case 12: {
+		string filename;
+		cout << "Digite o nome do arquivo onde deseja salvar as curvas: ";
+		cin >> filename;
+		saveCurves(filename) ? cout << "As curvas foram salvas com sucesso!" << endl : cout << "Houve um erro no salvamento das curvas." << endl;
+		break;
+			 }
+
+	case 13: {
+		string filename;
+		cout << "Digite o nome do arquivo de onde deseja carregar as curvas: ";
+		cin >> filename;
+		loadCurves(filename) ? cout << "As curvas foram carregadas com sucesso!" << endl : cout << "Houve um erro no carregamento das curvas." << endl;;
+		break;
+			 }
+
+	case 14:
+		if (main->getState() == CURVE_SELECTED) {
+			main->setState(TRANSLATING_CURVE);
 		}
+		break;
 
-		case 14:
-			if (main->getState() == CURVE_SELECTED) {
-				main->setState(TRANSLATING_CURVE);
-			}
-			break;
+	case 15:
+		if (main->getState() == CURVE_SELECTED) {
+			main->setState(ROTATING_CURVE);
+		}
+		break;
 
-		case 15:
-			if (main->getState() == CURVE_SELECTED) {
-				main->setState(ROTATING_CURVE);
-			}
-			break;
+	case 16:
+		if (main->getState() == CURVE_SELECTED) {
+			main->setState(SCALING_CURVE);
+		}
+		break;
 
-		case 16:
-			if (main->getState() == CURVE_SELECTED) {
-				main->setState(SCALING_CURVE);
-			}
-			break;
-
-		case 17:
-			if (main->getState() == CURVE_SELECTED) {
-				vector<Curve*> curves = main->getCurves();
-				curves.erase(curves.begin() + main->getSelectedCurve());
-				main->setCurves(curves);
-				main->setState(NO_STATE);
-				main->setCurrentCurve(new Curve());
-			}
-			break;
+	case 17:
+		if (main->getState() == CURVE_SELECTED) {
+			vector<Curve*> curves = main->getCurves();
+			curves.erase(curves.begin() + main->getSelectedCurve());
+			main->setCurves(curves);
+			main->setState(NO_STATE);
+			main->setCurrentCurve(new Curve());
+		}
+		break;
 	}
 
 	glutPostRedisplay();

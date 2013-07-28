@@ -71,6 +71,47 @@ void Curve::addCurvePoint(float x, float y) {
 	m_curvePoints.push_back(Point(x, y));
 }
 
+void Curve::translateCurve(Point mouseMoveDistance) {
+
+	if (mouseMoveDistance.getX() != 0 || mouseMoveDistance.getY() != 0) {
+		for (size_t i = 0; i < m_controlPoints.size() ; i++)
+		{
+			m_controlPoints.at(i).setX( (int)m_controlPoints.at(i).getX() + mouseMoveDistance.getX() ); 
+			m_controlPoints.at(i).setY( (int)m_controlPoints.at(i).getY() + mouseMoveDistance.getY() );			
+		}
+
+		refresh();
+	}
+}
+void Curve::rotateCurve(Point mouseMoveDistance) {
+	if (mouseMoveDistance.getX() != 0) {
+		for (size_t i = 0; i < m_controlPoints.size() ; i++)
+		{
+			//ERRO AO REESCALAR, PROVAVELMENTE PELO TYPE CASTING, ESTÁ DIMINUINDO O TAMANHO DA CURVA
+			//TESTES DE MUDANÇA DE REFERENCIA
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - 512.00f, m_controlPoints.at(i).getY() - 384.00f);
+
+			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX()/180)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX()/180)*PI) ); 
+			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX()/180)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX()/180)*PI) );
+
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + 512.00f, m_controlPoints.at(i).getY() + 384.0f);
+		}
+
+		refresh();
+	}
+}
+void Curve::escaleCurve(Point mouseMoveDistance) {
+	if (mouseMoveDistance.getX() != 0) {
+		for (size_t i = 0; i < m_controlPoints.size() ; i++)
+		{
+			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * mouseMoveDistance.getX()); 
+			m_controlPoints.at(i).setY( m_controlPoints.at(i).getY() * mouseMoveDistance.getX());				
+		}
+
+		refresh();
+	}
+}
+
 vector<Point> Curve::getControlPoints() {
 	return m_controlPoints;
 }
