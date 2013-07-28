@@ -102,10 +102,20 @@ void Curve::rotateCurve(Point mouseMoveDistance) {
 }
 void Curve::escaleCurve(Point mouseMoveDistance) {
 	if (mouseMoveDistance.getX() != 0) {
+
+		float x = m_controlPoints.at(0).getX(), y = m_controlPoints.at(0).getY();
+		
+		float multiplicativeFactor = mouseMoveDistance.getX() > 0 ? 1.05 : 0.95;
+
+
 		for (size_t i = 0; i < m_controlPoints.size() ; i++)
 		{
-			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * mouseMoveDistance.getX()); 
-			m_controlPoints.at(i).setY( m_controlPoints.at(i).getY() * mouseMoveDistance.getX());				
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - x, m_controlPoints.at(i).getY() - y);
+
+			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * multiplicativeFactor); 
+			m_controlPoints.at(i).setY( m_controlPoints.at(i).getY() * multiplicativeFactor);				
+
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + x, m_controlPoints.at(i).getY() + y);
 		}
 
 		refresh();
