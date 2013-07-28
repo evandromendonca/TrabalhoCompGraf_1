@@ -26,6 +26,8 @@ using namespace std;
 #define GL_WINDOW_SIZE 1024, 768
 #define GL_SCREEN 0.0, 1024.0, 768.0, 0.0
 
+#define PI 3.141592653589793
+
 
 //Enumerators
 enum CURVE_TYPE { 

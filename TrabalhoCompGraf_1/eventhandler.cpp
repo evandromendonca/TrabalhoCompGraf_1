@@ -4,11 +4,9 @@
 #include "bspline.h"
 #include "main.h"
 
-
 #include <iostream>
 
-int mouseDownPosX;
-int mouseDownPosY;
+Point mouseLastPosition;
 
 //Control Point Selection
 int checkControlPointHit(int x, int y) {
@@ -44,10 +42,8 @@ void mouse(int button, int state, int x, int y) {
 	Main *main = Main::getInstance();
 
 	//Get mouse down position
-	if ( button == GLUT_LEFT_BUTTON  && state == GLUT_DOWN ) {
-		mouseDownPosX = x;
-		mouseDownPosY = y;
-	}
+	if ( button == GLUT_LEFT_BUTTON  && state == GLUT_DOWN )
+		mouseLastPosition.setPosition((float)x, (float)y);
 
 	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == CREATING_BEZIER_CURVE || main->getState() == CREATING_BSPLINE))
@@ -61,7 +57,7 @@ void mouse(int button, int state, int x, int y) {
 	}
 
 	//Checking selection of a curve
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED || main->getState() == TRANSLATING_CURVE)) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED || main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE || main->getState() == SCALING_CURVE)) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
 		if ( main->getSelectedCurve() != -1) {
@@ -87,8 +83,13 @@ void mouse(int button, int state, int x, int y) {
 
 //Mouse Motion Event
 void mouseMotion(int x, int y) {
+	
+	//Generating mouse move distance
+	Point mouseMoveDistance = Point(x - mouseLastPosition.getX(), y - mouseLastPosition.getY());
+
 	Main *main = Main::getInstance();
 
+	//Moving Control Points
 	if (main->getState() == CURVE_SELECTED) {
 		main->setSelectedPoint(checkControlPointHit(x, y));
 
@@ -105,34 +106,45 @@ void mouseMotion(int x, int y) {
 		main->setCurrentCurve(curve);
 	}
 	
+	//Translating Curve
 	if (main->getState() == TRANSLATING_CURVE) {
 		Curve *curve = main->getCurrentCurve();
 		vector<Point> points = curve->getControlPoints();
 
-		int moveXDistance = x - mouseDownPosX;
-		int moveYDistance = y - mouseDownPosY;
-
 		for (size_t i = 0; i < points.size() ; i++)
 		{
-			points.at(i).setX( (int)points.at(i).getX() + moveXDistance ); 
-			points.at(i).setY( (int)points.at(i).getY() + moveYDistance );
+			points.at(i).setX( (int)points.at(i).getX() + mouseMoveDistance.getX() ); 
+			points.at(i).setY( (int)points.at(i).getY() + mouseMoveDistance.getY() );
 		}
-
-		mouseDownPosX = x;
-		mouseDownPosY = y;
 
 		curve->setControlPoints(points);
 		curve->refresh();
 		main->setCurrentCurve(curve);
 	}
 
+	//Rotating Curve
 	if (main->getState() == ROTATING_CURVE) {
-		
+		Curve *curve = main->getCurrentCurve();
+		vector<Point> points = curve->getControlPoints();
+
+		for (size_t i = 0; i < points.size() ; i++)
+		{
+			points.at(i).setX( points.at(i).getX() * cos((mouseMoveDistance.getX()/180)*PI) - points.at(i).getY() * sin((mouseMoveDistance.getX()/180)*PI) ); 
+			points.at(i).setY( points.at(i).getX() * sin((mouseMoveDistance.getX()/180)*PI) + points.at(i).getY() * cos((mouseMoveDistance.getX()/180)*PI) );
+		}
+
+		curve->setControlPoints(points);
+		curve->refresh();
+		main->setCurrentCurve(curve);
 	}
 
+	//Scaling Curve
 	if (main->getState() == SCALING_CURVE) {
 		
 	}
+
+	//Set MouseLastPosition
+	mouseLastPosition.setPosition(x, y);
 
 	glutPostRedisplay();
 }
