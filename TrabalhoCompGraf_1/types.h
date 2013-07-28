@@ -25,8 +25,11 @@ using namespace std;
 
 #define GL_WINDOW_SIZE 1024, 768
 #define GL_SCREEN 0.0, 1024.0, 768.0, 0.0
+#define CENTER_X 512.00f
+#define CENTER_Y 384.00f
 
 #define PI 3.141592653589793
+#define RAD 180
 
 
 //Enumerators

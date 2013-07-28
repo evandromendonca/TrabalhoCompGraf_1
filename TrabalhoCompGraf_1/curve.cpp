@@ -89,18 +89,18 @@ void Curve::rotateCurve(Point mouseMoveDistance) {
 		{
 			//ERRO AO REESCALAR, PROVAVELMENTE PELO TYPE CASTING, ESTÁ DIMINUINDO O TAMANHO DA CURVA
 			//TESTES DE MUDANÇA DE REFERENCIA
-			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - 512.00f, m_controlPoints.at(i).getY() - 384.00f);
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - CENTER_X, m_controlPoints.at(i).getY() - CENTER_Y);
 
-			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX()/180)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX()/180)*PI) ); 
-			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX()/180)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX()/180)*PI) );
+			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX() / RAD)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
+			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX() / RAD)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX() / RAD)*PI) );
 
-			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + 512.00f, m_controlPoints.at(i).getY() + 384.0f);
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + CENTER_X, m_controlPoints.at(i).getY() + CENTER_Y);
 		}
 
 		refresh();
 	}
 }
-void Curve::escaleCurve(Point mouseMoveDistance) {
+void Curve::scaleCurve(Point mouseMoveDistance) {
 	if (mouseMoveDistance.getX() != 0) {
 
 		float x = m_controlPoints.at(0).getX(), y = m_controlPoints.at(0).getY();
@@ -108,8 +108,7 @@ void Curve::escaleCurve(Point mouseMoveDistance) {
 		float multiplicativeFactor = mouseMoveDistance.getX() > 0 ? 1.05 : 0.95;
 
 
-		for (size_t i = 0; i < m_controlPoints.size() ; i++)
-		{
+		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - x, m_controlPoints.at(i).getY() - y);
 
 			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * multiplicativeFactor); 

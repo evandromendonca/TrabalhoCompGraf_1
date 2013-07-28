@@ -29,7 +29,7 @@ public:
 
 	void translateCurve(Point mouseMoveDistance);
 	void rotateCurve(Point mouseMoveDistance);
-	void escaleCurve(Point mouseMoveDistance);
+	void scaleCurve(Point mouseMoveDistance);
 
 	int getCurveDegree();
 	vector<Point> getControlPoints();

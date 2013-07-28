@@ -118,7 +118,7 @@ void mouseMotion(int x, int y) {
 
 	//Scaling Curve
 	if (main->getState() == SCALING_CURVE) {
-		main->getCurrentCurve()->escaleCurve(mouseMoveDistance);
+		main->getCurrentCurve()->scaleCurve(mouseMoveDistance);
 	}
 
 	//Set MouseLastPosition
