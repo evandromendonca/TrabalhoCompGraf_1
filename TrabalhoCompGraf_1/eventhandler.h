@@ -14,4 +14,3 @@ functions
 	void keyboard(unsigned char, int, int);
 
 	void menu(int);
-

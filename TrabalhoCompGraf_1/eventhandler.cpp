@@ -6,6 +6,11 @@
 
 #include <iostream>
 
+//Nao consegui criar no .h, nao entendi mt bem como funciona, e nao quero perder meu tempo com isso, depois  vc me explica =)
+int mouseDownPosX;
+int mouseDownPosY;
+
+
 //Control Point Selection
 int checkControlPointHit(int x, int y) {
 	vector<Point> points = Main::getInstance()->getCurrentCurve()->getControlPoints();
@@ -39,6 +44,12 @@ int checkCurveHit(int x, int y) {
 void mouse(int button, int state, int x, int y) {
 	Main *main = Main::getInstance();
 
+	//Get mouse down position
+	if ( button == GLUT_LEFT_BUTTON  && state == GLUT_DOWN ) {
+		mouseDownPosX = x;
+		mouseDownPosY = y;
+	}
+
 	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == CREATING_BEZIER_CURVE || main->getState() == CREATING_BSPLINE))
 		main->addPointToCurrentCurve(x, y);
@@ -51,7 +62,7 @@ void mouse(int button, int state, int x, int y) {
 	}
 
 	//Checking selection of a curve
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED)) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED || main->getState() == TRANSLATING_CURVE)) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
 		if ( main->getSelectedCurve() != -1) {
@@ -96,7 +107,24 @@ void mouseMotion(int x, int y) {
 	}
 	
 	if (main->getState() == TRANSLATING_CURVE) {
-		
+		Curve *curve = main->getCurrentCurve();
+		vector<Point> points = curve->getControlPoints();
+
+		int moveXDistance = x - mouseDownPosX;
+		int moveYDistance = y - mouseDownPosY;
+
+		for (size_t i = 0; i < points.size() ; i++)
+		{
+			points.at(i).setX( (int)points.at(i).getX() + moveXDistance ); 
+			points.at(i).setY( (int)points.at(i).getY() + moveYDistance );
+		}
+
+		mouseDownPosX = x;
+		mouseDownPosY = y;
+
+		curve->setControlPoints(points);
+		curve->refresh();
+		main->setCurrentCurve(curve);
 	}
 
 	if (main->getState() == ROTATING_CURVE) {
