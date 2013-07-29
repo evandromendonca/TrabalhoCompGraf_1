@@ -57,7 +57,10 @@ void mouse(int button, int state, int x, int y) {
 	}
 
 	//Checking selection of a curve
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && (main->getState() == NO_STATE || main->getState() == CURVE_SELECTED || main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE || main->getState() == SCALING_CURVE)) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && 
+		(main->getState() == NO_STATE || main->getState() == CURVE_SELECTED ||
+		 main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE ||
+		 main->getState() == SCALING_CURVE)) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
 		if ( main->getSelectedCurve() != -1) {
@@ -97,13 +100,7 @@ void mouseMotion(int x, int y) {
 			main->setState(MOVING_CONTROL_POINTS);
 	}
 	else if (main->getState() == MOVING_CONTROL_POINTS) {
-		Curve *curve = main->getCurrentCurve();
-		vector<Point> points = curve->getControlPoints();
-
-		points.at(main->getSelectedPoint()).setPosition(x, y);
-		curve->refresh();
-		curve->setControlPoints(points);
-		main->setCurrentCurve(curve);
+		main->getCurrentCurve()->moveControlPoint(x, y, main->getSelectedPoint());
 	}
 
 	//Translating Curve
@@ -141,7 +138,7 @@ void drawControlPoints() {
 		glVertex2d(points[i].getX(), points[i].getY());	
 	}
 
-	glEnd();	
+	glEnd();
 }
 
 void drawReferencialLines() {
@@ -149,10 +146,10 @@ void drawReferencialLines() {
 	glBegin(GL_LINES);
 	
 	// Ver como pegar por variaveis o tamanho da janela para fazer essa contas
-	glVertex2f(1024/2, 0);
-	glVertex2f(1024/2, 768);
-	glVertex2f(0, 768/2);
-	glVertex2f(1024, 768/2);
+	glVertex2f(CENTER_X, 0);
+	glVertex2f(CENTER_X, CENTER_Y*2);
+	glVertex2f(0, CENTER_Y);
+	glVertex2f(CENTER_X*2, CENTER_Y);
 	glEnd();
 }
 
@@ -261,7 +258,7 @@ void menu(int option) {
 		cin >> filename;
 		saveCurves(filename) ? cout << "As curvas foram salvas com sucesso!" << endl : cout << "Houve um erro no salvamento das curvas." << endl;
 		break;
-			 }
+	}
 
 	case 13: {
 		string filename;
@@ -269,34 +266,26 @@ void menu(int option) {
 		cin >> filename;
 		loadCurves(filename) ? cout << "As curvas foram carregadas com sucesso!" << endl : cout << "Houve um erro no carregamento das curvas." << endl;;
 		break;
-			 }
+	}
 
 	case 14:
-		if (main->getState() == CURVE_SELECTED) {
+		if (main->getState() == CURVE_SELECTED)
 			main->setState(TRANSLATING_CURVE);
-		}
 		break;
 
 	case 15:
-		if (main->getState() == CURVE_SELECTED) {
+		if (main->getState() == CURVE_SELECTED)
 			main->setState(ROTATING_CURVE);
-		}
 		break;
 
 	case 16:
-		if (main->getState() == CURVE_SELECTED) {
+		if (main->getState() == CURVE_SELECTED)
 			main->setState(SCALING_CURVE);
-		}
 		break;
 
 	case 17:
-		if (main->getState() == CURVE_SELECTED) {
-			vector<Curve*> curves = main->getCurves();
-			curves.erase(curves.begin() + main->getSelectedCurve());
-			main->setCurves(curves);
-			main->setState(NO_STATE);
-			main->setCurrentCurve(new Curve());
-		}
+		if (main->getState() == CURVE_SELECTED) 
+			main->deleteCurve();
 		break;
 	}
 

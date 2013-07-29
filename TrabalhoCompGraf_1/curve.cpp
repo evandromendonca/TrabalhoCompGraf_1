@@ -71,6 +71,11 @@ void Curve::addCurvePoint(float x, float y) {
 	m_curvePoints.push_back(Point(x, y));
 }
 
+void Curve::moveControlPoint(float x, float y, int selectedPoint) {
+	m_controlPoints.at(selectedPoint).setPosition(x, y);
+	refresh();
+}
+
 void Curve::translateCurve(Point mouseMoveDistance) {
 
 	if (mouseMoveDistance.getX() != 0 || mouseMoveDistance.getY() != 0) {

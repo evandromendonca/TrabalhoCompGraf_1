@@ -119,6 +119,12 @@ void Main::setAssignedDegree(int assignedDegree) {
 }
 /* Assigned Degree */
 
+void Main::deleteCurve() {
+	m_curves.erase(m_curves.begin() + m_selectedCurve);
+	setState(NO_STATE);
+	setCurrentCurve(new Curve());
+}
+
 
 /* Menu */
 void Main::createMenu(void) {

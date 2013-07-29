@@ -29,7 +29,7 @@ using namespace std;
 #define CENTER_Y 384.00f
 
 #define PI 3.141592653589793
-#define RAD 180
+#define RAD 180.0
 
 
 //Enumerators

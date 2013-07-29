@@ -27,6 +27,7 @@ public:
 	void addCurvePoint(Point);
 	void addCurvePoint(float, float);
 
+	void moveControlPoint(float, float, int);
 	void translateCurve(Point mouseMoveDistance);
 	void rotateCurve(Point mouseMoveDistance);
 	void scaleCurve(Point mouseMoveDistance);

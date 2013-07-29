@@ -36,6 +36,8 @@ public functions:
 	CURVE_TYPE getAssignedType();
 	void setAssignedType(CURVE_TYPE);
 
+	void deleteCurve();
+
 	void createMenu();
 
 private members:
