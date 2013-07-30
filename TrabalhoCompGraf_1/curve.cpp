@@ -87,6 +87,7 @@ void Curve::translateCurve(Point mouseMoveDistance) {
 		refresh();
 	}
 }
+
 void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 	if (mouseMoveDistance.getX() != 0) {
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
@@ -102,6 +103,26 @@ void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 		refresh();
 	}
 }
+
+void Curve::rotateCurveAxis(Point mouseMoveDistance) {
+
+	//TODO
+
+	/*if (mouseMoveDistance.getX() != 0) {
+		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
+
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - CENTER_X, m_controlPoints.at(i).getY() - CENTER_Y);
+
+			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX() / RAD)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
+			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX() / RAD)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX() / RAD)*PI) );
+
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + CENTER_X, m_controlPoints.at(i).getY() + CENTER_Y);
+		}
+
+		refresh();
+	}*/
+}
+
 void Curve::scaleCurve(Point mouseMoveDistance) {
 	if (mouseMoveDistance.getX() != 0) {
 

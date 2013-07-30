@@ -108,9 +108,14 @@ void mouseMotion(int x, int y) {
 		main->getCurrentCurve()->translateCurve(mouseMoveDistance);
 	}
 
-	//Rotating Curve
+	//Rotating Curve Center of Screen
 	if (main->getState() == ROTATING_CURVE_SCREEN) {
 		main->getCurrentCurve()->rotateCurveScreen(mouseMoveDistance);		
+	}
+
+	//Rotating Curve on its own axis
+	if (main->getState() == ROTATING_CURVE_AXIS) {
+		main->getCurrentCurve()->rotateCurveAxis(mouseMoveDistance);		
 	}
 
 	//Scaling Curve
@@ -236,11 +241,6 @@ void menu(int option) {
 			main->setState(TYPE_AND_DEGREE_ASSIGNED);
 		else if (main->getState() == NO_STATE)
 			main->setState(DEGREE_ASSIGNED);
-		//Por enquanto essa condição está travando o programa porque não chegamos ainda a tratar esse estado! Descomentar quando for ser tratado!
-		//else if (main->getState() == CURVE_SELECTED) {
-		//	main->setState(EDITING_CONTROL_POINTS);
-		//	main->setCurrentCurveDegree(option);
-		//}
 		break;
 
 	case 11:

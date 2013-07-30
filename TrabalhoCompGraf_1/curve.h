@@ -20,7 +20,7 @@ public:
 	void draw(GLfloat, GLfloat, GLfloat);
 	void setCurveDegree(int);
 
-	void setControlPoints(vector<Point> points);
+	void setControlPoints(vector<Point>);
 
 	void addControlPoint(Point);
 	void addControlPoint(double, double);
@@ -28,9 +28,10 @@ public:
 	void addCurvePoint(double, double);
 
 	void moveControlPoint(double, double, int);
-	void translateCurve(Point mouseMoveDistance);
-	void rotateCurveScreen(Point mouseMoveDistance);
-	void scaleCurve(Point mouseMoveDistance);
+	void translateCurve(Point);
+	void rotateCurveScreen(Point);
+	void rotateCurveAxis(Point);
+	void scaleCurve(Point);
 
 	int getCurveDegree();
 	vector<Point> getControlPoints();
