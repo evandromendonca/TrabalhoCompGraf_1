@@ -34,6 +34,7 @@ public:
 	void scaleCurve(Point);
 
 	int getCurveDegree();
+	Point getCenter();
 	vector<Point> getControlPoints();
 	vector<Point> getCurvePoints();
 
@@ -41,6 +42,7 @@ protected:
 	vector<Point> m_controlPoints;
 	vector<Point> m_curvePoints;
 	int m_curveDegree;
+	Point m_center;
 
 private:
 

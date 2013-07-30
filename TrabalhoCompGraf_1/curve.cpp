@@ -107,27 +107,46 @@ void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 void Curve::rotateCurveAxis(Point mouseMoveDistance) {
 
 	//TODO
+	if (mouseMoveDistance.getX() != 0) {
 
-	/*if (mouseMoveDistance.getX() != 0) {
+		int xMin = m_controlPoints.at(0).getX(), 
+			xMax = m_controlPoints.at(0).getX(), 
+			yMin = m_controlPoints.at(0).getY(), 
+			yMax = m_controlPoints.at(0).getY();
+
+		for (size_t i = 0; i < m_controlPoints.size(); i++)
+		{
+			if( m_controlPoints.at(i).getX() < xMin )
+				xMin = m_controlPoints.at(i).getX();
+			if( m_controlPoints.at(i).getX() > xMax )
+				xMax = m_controlPoints.at(i).getX();
+			if( m_controlPoints.at(i).getY() < yMin )
+				yMin = m_controlPoints.at(i).getY();
+			if( m_controlPoints.at(i).getY() > yMax )
+				yMax = m_controlPoints.at(i).getY();
+		}
+
+		m_center.setPosition((xMin+xMax)/2, (yMin+yMax)/2);
+
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
-
-			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - CENTER_X, m_controlPoints.at(i).getY() - CENTER_Y);
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - m_center.getX(), m_controlPoints.at(i).getY() - m_center.getY());
 
 			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX() / RAD)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
 			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX() / RAD)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX() / RAD)*PI) );
 
-			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + CENTER_X, m_controlPoints.at(i).getY() + CENTER_Y);
+			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + m_center.getX(), m_controlPoints.at(i).getY() + m_center.getY());
 		}
 
 		refresh();
-	}*/
+
+	}
 }
 
 void Curve::scaleCurve(Point mouseMoveDistance) {
 	if (mouseMoveDistance.getX() != 0) {
 
 		double x = m_controlPoints.at(0).getX(), y = m_controlPoints.at(0).getY();
-		
+
 		double multiplicativeFactor = mouseMoveDistance.getX() > 0 ? 1.05 : 0.95;
 
 
@@ -154,4 +173,8 @@ vector<Point> Curve::getCurvePoints() {
 
 CURVE_TYPE Curve::getType() {
 	return UNASSIGNED;
+}
+
+Point Curve::getCenter() {
+	return m_center;
 }

@@ -60,7 +60,7 @@ void mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && 
 		(main->getState() == NO_STATE || main->getState() == CURVE_SELECTED ||
 		 main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE_SCREEN ||
-		 main->getState() == SCALING_CURVE)) {
+		 main->getState() == SCALING_CURVE || main->getState() == ROTATING_CURVE_AXIS) ) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
 		if ( main->getSelectedCurve() != -1) {
@@ -146,15 +146,14 @@ void drawControlPoints() {
 	glEnd();
 }
 
-void drawReferencialLines() {
+void drawReferencialLines(int centerX, int centerY) {
 	glColor3f(COLOR_WHITE);
-	glBegin(GL_LINES);
 	
-	// Ver como pegar por variaveis o tamanho da janela para fazer essa contas
-	glVertex2f(CENTER_X, 0);
-	glVertex2f(CENTER_X, CENTER_Y*2);
-	glVertex2f(0, CENTER_Y);
-	glVertex2f(CENTER_X*2, CENTER_Y);
+	glBegin(GL_LINES);
+	glVertex2f(centerX, 0);
+	glVertex2f(centerX, centerY*2);
+	glVertex2f(0, centerY);
+	glVertex2f(centerX*2, centerY);
 	glEnd();
 }
 
@@ -166,7 +165,7 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	if (main->getState() == ROTATING_CURVE_SCREEN)
-		drawReferencialLines();
+		drawReferencialLines(CENTER_X, CENTER_Y);
 
 	for (size_t i = 0; i < curves.size(); i++) {
 		if (main->getSelectedCurve() == i)
