@@ -5,23 +5,23 @@ class Point
 
 public:
 	Point(void);
-	Point(float, float);
+	Point(double, double);
 	~Point(void);
 
 	Point& operator=(const Point&);
 
-	void Point::setPosition(float x, float y);
+	void Point::setPosition(double x, double y);
 
-	void setX(float);
-	void setY(float);
+	void setX(double);
+	void setY(double);
 
-	float getX();
-	float getY();
+	double getX();
+	double getY();
 
 protected:
 
 private:
-	float m_x;
-	float m_y;
+	double m_x;
+	double m_y;
 
 };

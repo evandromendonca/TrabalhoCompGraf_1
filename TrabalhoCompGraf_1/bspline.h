@@ -16,9 +16,9 @@ public:
 protected:
 
 private:
-	vector<float> m_knots;
+	vector<double> m_knots;
 
-	float basis(int, int, float);
+	double basis(int, int, double);
 	void createKnotsVector(int, int, size_t);
 
 };

@@ -43,7 +43,7 @@ void mouse(int button, int state, int x, int y) {
 
 	//Get mouse down position
 	if ( button == GLUT_LEFT_BUTTON  && state == GLUT_DOWN )
-		mouseLastPosition.setPosition((float)x, (float)y);
+		mouseLastPosition.setPosition((double)x, (double)y);
 
 	//Creating initial control points of the curve
 	if( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && (main->getState() == CREATING_BEZIER_CURVE || main->getState() == CREATING_BSPLINE))
@@ -59,7 +59,7 @@ void mouse(int button, int state, int x, int y) {
 	//Checking selection of a curve
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && 
 		(main->getState() == NO_STATE || main->getState() == CURVE_SELECTED ||
-		 main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE ||
+		 main->getState() == TRANSLATING_CURVE || main->getState() == ROTATING_CURVE_SCREEN ||
 		 main->getState() == SCALING_CURVE)) {
 		main->setSelectedCurve(checkCurveHit(x, y));
 
@@ -109,8 +109,8 @@ void mouseMotion(int x, int y) {
 	}
 
 	//Rotating Curve
-	if (main->getState() == ROTATING_CURVE) {
-		main->getCurrentCurve()->rotateCurve(mouseMoveDistance);		
+	if (main->getState() == ROTATING_CURVE_SCREEN) {
+		main->getCurrentCurve()->rotateCurveScreen(mouseMoveDistance);		
 	}
 
 	//Scaling Curve
@@ -160,7 +160,7 @@ void display(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	if (main->getState() == ROTATING_CURVE)
+	if (main->getState() == ROTATING_CURVE_SCREEN)
 		drawReferencialLines();
 
 	for (size_t i = 0; i < curves.size(); i++) {
@@ -173,6 +173,12 @@ void display(void) {
 	drawControlPoints();
 
 	glutSwapBuffers();
+}
+
+void reshape(int width, int height) {
+	if( width != GL_WINDOW_WIDTH || height != GL_WINDOW_HEIGHT ) { 
+		glutReshapeWindow( GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT); 
+	}
 }
 
 //Keyboard Event
@@ -275,15 +281,20 @@ void menu(int option) {
 
 	case 15:
 		if (main->getState() == CURVE_SELECTED)
-			main->setState(ROTATING_CURVE);
+			main->setState(ROTATING_CURVE_SCREEN);
 		break;
 
 	case 16:
 		if (main->getState() == CURVE_SELECTED)
-			main->setState(SCALING_CURVE);
+			main->setState(ROTATING_CURVE_AXIS);
 		break;
 
 	case 17:
+		if (main->getState() == CURVE_SELECTED)
+			main->setState(SCALING_CURVE);
+		break;
+
+	case 18:
 		if (main->getState() == CURVE_SELECTED) 
 			main->deleteCurve();
 		break;

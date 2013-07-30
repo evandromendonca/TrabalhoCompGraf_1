@@ -10,6 +10,7 @@ functions
 	void drawControlPoints();
 	void drawReferencialLines();
 	void display(void);
+	void reshape(int, int);
 
 	void keyboard(unsigned char, int, int);
 

@@ -6,7 +6,7 @@ Point::Point(void) {
 	m_y = 0.0;
 }
 
-Point::Point(float x, float y) {
+Point::Point(double x, double y) {
 	m_x = x;
 	m_y = y;
 }
@@ -22,23 +22,23 @@ Point& Point::operator=(const Point &src) {
 	return *this;
 }
 
-void Point::setPosition(float x, float y) {
+void Point::setPosition(double x, double y) {
 	m_x = x;
 	m_y = y;
 }
 
-void Point::setX(float x) {
+void Point::setX(double x) {
 	m_x = x;
 }
 
-void Point::setY(float y) {
+void Point::setY(double y) {
 	m_y = y;
 }
 
-float Point::getX() {
+double Point::getX() {
 	return m_x;
 }
 
-float Point::getY() {
+double Point::getY() {
 	return m_y;
 }

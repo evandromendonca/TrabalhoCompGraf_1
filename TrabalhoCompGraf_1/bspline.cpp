@@ -15,11 +15,11 @@ void BSpline::refresh() {
 
 	createKnotsVector(m_curveDegree, m_controlPoints.size() - 1, (size_t)m_controlPoints.size() + m_curveDegree);
 
-	for(float iterator = m_knots.at(m_curveDegree-1); iterator <= m_knots.at(m_controlPoints.size()); iterator += 0.01f) {
-		float x = 0.0f, y = 0.0f;
+	for(double iterator = m_knots.at(m_curveDegree-1); iterator <= m_knots.at(m_controlPoints.size()); iterator += 0.01f) {
+		double x = 0.0f, y = 0.0f;
 
 		for(size_t i = 0; i < m_controlPoints.size(); i++) {
-			float base = basis(i, m_curveDegree, iterator);
+			double base = basis(i, m_curveDegree, iterator);
 			x += base * getControlPoints().at(i).getX();
 			y += base * getControlPoints().at(i).getY();
 		}
@@ -37,15 +37,15 @@ CURVE_TYPE BSpline::getType() {
 }
 
 void BSpline::createKnotsVector(int p, int n, size_t m) {
-	float iterator = 0.0;
+	double iterator = 0.0;
 	for (size_t i = 0; i <= m; i++) {
 		m_knots.push_back(iterator);
-		iterator += 1.0f/(float)m;
+		iterator += 1.0f/(double)m;
 	}
 	
 }
 
-float BSpline::basis(int i, int j, float t) {
+double BSpline::basis(int i, int j, double t) {
 
 	if( j == 1 ) {
 		if( (m_knots.at(i) <= t && t < m_knots.at(i+1)) )
@@ -53,13 +53,13 @@ float BSpline::basis(int i, int j, float t) {
 		return 0;
 	}
 
-	float numeratorA = ( t - m_knots.at(i) );
-	float denominatorA = ( m_knots.at(i + j - 1) - m_knots.at(i) );
-	float numeratorB = ( m_knots.at(i + j) - t );
-	float denominatorB = ( m_knots.at(i + j) - m_knots.at(i + 1) );
+	double numeratorA = ( t - m_knots.at(i) );
+	double denominatorA = ( m_knots.at(i + j - 1) - m_knots.at(i) );
+	double numeratorB = ( m_knots.at(i + j) - t );
+	double denominatorB = ( m_knots.at(i + j) - m_knots.at(i + 1) );
 
-	float subweightA = 0;
-	float subweightB = 0;
+	double subweightA = 0;
+	double subweightB = 0;
 
 	if( denominatorA != 0 )
 		subweightA = (numeratorA / denominatorA) * basis(i, j-1, t);

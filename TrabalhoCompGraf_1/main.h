@@ -20,7 +20,7 @@ public functions:
 	Curve* getCurrentCurve();
 	void setCurrentCurve(Curve*);
 	void addPointToCurrentCurve(Point);
-	void addPointToCurrentCurve(float, float);
+	void addPointToCurrentCurve(double, double);
 	void setCurrentCurveDegree(int);
 	void refreshCurrentCurve();
 
@@ -54,6 +54,7 @@ private members:
 	int m_curveTypeSubMenuID;
 	int m_curveDegreeSubMenuID;
 	int m_curveOptionsSubMenuID;
+	int m_rotateTypeSubMenuID;
 
 	int m_assignedDegree;
 	CURVE_TYPE m_assignedType;

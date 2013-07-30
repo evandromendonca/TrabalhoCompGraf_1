@@ -17,6 +17,6 @@ protected:
 
 
 private:
-	float factorial(int);
-	float combination(int, int);
+	double factorial(int);
+	double combination(int, int);
 };

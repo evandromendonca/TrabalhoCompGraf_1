@@ -63,7 +63,7 @@ void Main::addPointToCurrentCurve(Point point) {
 	m_pCurrentCurve->addControlPoint(point);
 }
 
-void Main::addPointToCurrentCurve(float x, float y) {
+void Main::addPointToCurrentCurve(double x, double y) {
 	m_pCurrentCurve->addControlPoint(x, y);
 }
 
@@ -129,11 +129,15 @@ void Main::deleteCurve() {
 /* Menu */
 void Main::createMenu(void) {
 	if (m_currentState == CURVE_SELECTED) {
+		m_rotateTypeSubMenuID = glutCreateMenu(menu);
+		glutAddMenuEntry("Em torno ao centro da tela", 15);
+		glutAddMenuEntry("Em torno do seu centro", 16);
+
 		m_curveOptionsSubMenuID = glutCreateMenu(menu);
 		glutAddMenuEntry("Transladar curva", 14);
-		glutAddMenuEntry("Rotacionar curva", 15);
-		glutAddMenuEntry("Escalar curva", 16);
-		glutAddMenuEntry("Excluir curva", 17);
+		glutAddSubMenu("Rotacionar curva", m_rotateTypeSubMenuID);
+		glutAddMenuEntry("Escalar curva", 17);
+		glutAddMenuEntry("Excluir curva", 18);
 
 		m_menuID = glutCreateMenu(menu);
 		glutAddSubMenu("Opções de curva", m_curveOptionsSubMenuID);
@@ -154,20 +158,12 @@ void Main::createMenu(void) {
 		glutAddMenuEntry("9", 9);
 		glutAddMenuEntry("10", 10);
 
-		m_curveOptionsSubMenuID = glutCreateMenu(menu);
-		glutAddMenuEntry("Transladar curva", 14);
-		glutAddMenuEntry("Rotacionar curva", 15);
-		glutAddMenuEntry("Escalar curva", 16);
-		glutAddMenuEntry("Excluir curva", 17);
-
-
 		m_menuID = glutCreateMenu(menu);
 		glutAddSubMenu("Escolher tipo de curva", m_curveTypeSubMenuID);
 		glutAddSubMenu("Escolher grau da Curva", m_curveDegreeSubMenuID);
 		glutAddMenuEntry("Criar curva", 11);
 		glutAddMenuEntry("Salvar curvas", 12);
 		glutAddMenuEntry("Carregar curvas", 13);
-		glutAddSubMenu("Opções de curva", m_curveOptionsSubMenuID);
 		glutAddMenuEntry("Sair", 0);
 	}
 
@@ -211,8 +207,10 @@ int Main::run(int argc, char **argv) {
 	//Setting Glut function callbacks
 	glutMouseFunc(mouse);
 	glutMotionFunc(mouseMotion);
-	glutDisplayFunc(display);  
 	glutKeyboardFunc(keyboard);
+	glutReshapeFunc(reshape);
+	glutDisplayFunc(display);  
+	
 
 	//Starting the Glut main loop
 	glutMainLoop();

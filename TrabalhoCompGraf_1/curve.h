@@ -23,13 +23,13 @@ public:
 	void setControlPoints(vector<Point> points);
 
 	void addControlPoint(Point);
-	void addControlPoint(float, float);
+	void addControlPoint(double, double);
 	void addCurvePoint(Point);
-	void addCurvePoint(float, float);
+	void addCurvePoint(double, double);
 
-	void moveControlPoint(float, float, int);
+	void moveControlPoint(double, double, int);
 	void translateCurve(Point mouseMoveDistance);
-	void rotateCurve(Point mouseMoveDistance);
+	void rotateCurveScreen(Point mouseMoveDistance);
 	void scaleCurve(Point mouseMoveDistance);
 
 	int getCurveDegree();
