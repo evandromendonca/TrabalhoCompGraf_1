@@ -123,6 +123,8 @@ void Main::deleteCurve() {
 	m_curves.erase(m_curves.begin() + m_selectedCurve);
 	setState(NO_STATE);
 	setCurrentCurve(new Curve());
+	setSelectedCurve(-1);
+	createMenu();
 }
 
 

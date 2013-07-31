@@ -53,7 +53,9 @@ void mouse(int button, int state, int x, int y) {
 	if (main->getState() == CREATING_BEZIER_CURVE && main->getCurrentCurve()->hasAllControlPoints()) {
 		main->refreshCurrentCurve();
 		main->addCurve(main->getCurrentCurve());
-		main->setState(NO_STATE);
+		main->setState(CURVE_SELECTED);
+		main->setSelectedCurve(main->getCurves().size() - 1);
+		main->createMenu();
 	}
 
 	//Checking selection of a curve
@@ -78,6 +80,7 @@ void mouse(int button, int state, int x, int y) {
 	//Stop the motion of the control point
 	if (main->getState() == MOVING_CONTROL_POINTS) {
 		main->setState(CURVE_SELECTED);
+		main->createMenu();
 	}
 
 	//Other cases
@@ -194,12 +197,12 @@ void keyboard(unsigned char key, int x, int y) {
 
 		if (main->getCurrentCurve()->hasAllControlPoints()) {
 			main->addCurve(main->getCurrentCurve());
-			Main::getInstance()->setState(NO_STATE);
-
+			main->setState(CURVE_SELECTED);
+			main->setSelectedCurve(main->getCurves().size() - 1);
+			main->createMenu();
 		}
 	}
-
-	if (key == GLUT_KEY_ENTER && main->getState() == CURVE_SELECTED) {
+	else if (key == GLUT_KEY_ENTER && main->getState() == CURVE_SELECTED) {
 		main->setSelectedCurve(-1);
 		main->setCurrentCurve(new Curve());
 		main->setState(NO_STATE);
