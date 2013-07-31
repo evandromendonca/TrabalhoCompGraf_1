@@ -46,6 +46,7 @@ STATE Main::getState() {
 
 void Main::setState(STATE currentState) {
 	m_currentState = currentState;
+	createMenu();
 }
 /* Current State */
 
@@ -121,10 +122,9 @@ void Main::setAssignedDegree(int assignedDegree) {
 
 void Main::deleteCurve() {
 	m_curves.erase(m_curves.begin() + m_selectedCurve);
-	setState(NO_STATE);
 	setCurrentCurve(new Curve());
 	setSelectedCurve(-1);
-	createMenu();
+	setState(NO_STATE);
 }
 
 
@@ -196,7 +196,7 @@ int Main::run(int argc, char **argv) {
 	m_window = glutCreateWindow("Computação Gráfica - Trabalho 1");
 
 	//Creating menu
-    createMenu();
+	createMenu();
 
 	//Preparing OpenGL environment
 	glClearColor(COLOR_BLACK, 0.0); 
