@@ -148,7 +148,7 @@ void Main::createMenu(void) {
 	else {
 		m_curveTypeSubMenuID = glutCreateMenu(menu);
 		glutAddMenuEntry("Bézier", 1);
-		glutAddMenuEntry("B-Spline uniforme", 2);
+		glutAddMenuEntry("B-Spline Uniforme", 2);
 
 		m_curveDegreeSubMenuID = glutCreateMenu(menu);
 		glutAddMenuEntry("3", 3);
@@ -162,7 +162,7 @@ void Main::createMenu(void) {
 
 		m_menuID = glutCreateMenu(menu);
 		glutAddSubMenu("Escolher tipo de curva", m_curveTypeSubMenuID);
-		glutAddSubMenu("Escolher grau da Curva", m_curveDegreeSubMenuID);
+		glutAddSubMenu("Escolher grau da curva", m_curveDegreeSubMenuID);
 		glutAddMenuEntry("Criar curva", 11);
 		glutAddMenuEntry("Salvar curvas", 12);
 		glutAddMenuEntry("Carregar curvas", 13);

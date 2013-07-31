@@ -31,7 +31,7 @@ void BSpline::refresh() {
 }
 
 bool BSpline::hasAllControlPoints() { 
-	return m_controlPoints.size() >= (m_knots.size() - m_curveDegree - 1);
+	return m_controlPoints.size() > m_curveDegree;
 }
 
 CURVE_TYPE BSpline::getType() {
@@ -39,12 +39,12 @@ CURVE_TYPE BSpline::getType() {
 }
 
 void BSpline::createKnotsVector(int p, int n, size_t m) {
+	m_knots.clear();
 	double iterator = 0.0;
 	for (size_t i = 0; i <= m; i++) {
 		m_knots.push_back(iterator);
 		iterator += 1.0f/(double)m;
 	}
-	
 }
 
 double BSpline::basis(int i, int j, double t) {

@@ -190,14 +190,11 @@ void reshape(int width, int height) {
 void keyboard(unsigned char key, int x, int y) {
 	Main *main = Main::getInstance();
 
-	if (key == GLUT_KEY_ENTER && main->getState() == CREATING_BSPLINE) {
-		main->refreshCurrentCurve();
-
-		if (main->getCurrentCurve()->hasAllControlPoints()) {
-			main->addCurve(main->getCurrentCurve());
-			main->setSelectedCurve(main->getCurves().size() - 1);
-			main->setState(CURVE_SELECTED);
-		}
+	if (key == GLUT_KEY_ENTER && main->getState() == CREATING_BSPLINE && main->getCurrentCurve()->hasAllControlPoints()) {
+		main->getCurrentCurve()->refresh();
+		main->addCurve(main->getCurrentCurve());
+		main->setSelectedCurve(main->getCurves().size() - 1);
+		main->setState(CURVE_SELECTED);
 	}
 	else if (key == GLUT_KEY_ENTER && main->getState() == CURVE_SELECTED) {
 		main->setSelectedCurve(-1);

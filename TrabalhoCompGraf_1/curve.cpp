@@ -145,8 +145,7 @@ void Curve::scaleCurve(Point mouseMoveDistance) {
 
 void Curve::generateCenter() {
 	int somaX = 0, somaY = 0;
-	for (int i = 0; i < m_controlPoints.size(); i++)
-	{
+	for (size_t i = 0; i < m_controlPoints.size(); i++) {
 		somaX += m_controlPoints.at(i).getX();
 		somaY += m_controlPoints.at(i).getY();
 	}
