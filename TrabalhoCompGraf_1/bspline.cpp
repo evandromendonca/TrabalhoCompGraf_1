@@ -26,6 +26,8 @@ void BSpline::refresh() {
 
 		addCurvePoint(x,y);
 	}
+
+	Curve::refresh();
 }
 
 bool BSpline::hasAllControlPoints() { 

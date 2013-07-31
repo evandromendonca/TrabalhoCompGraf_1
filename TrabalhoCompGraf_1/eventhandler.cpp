@@ -165,6 +165,8 @@ void display(void) {
 
 	if (main->getState() == ROTATING_CURVE_SCREEN)
 		drawReferencialLines(CENTER_X, CENTER_Y);
+	if (main->getState() == ROTATING_CURVE_AXIS)
+		drawReferencialLines(curves.at(main->getSelectedCurve())->getCenter().getX(), curves.at(main->getSelectedCurve())->getCenter().getY());
 
 	for (size_t i = 0; i < curves.size(); i++) {
 		if (main->getSelectedCurve() == i)

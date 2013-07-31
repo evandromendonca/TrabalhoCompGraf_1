@@ -21,6 +21,7 @@ public:
 	void setCurveDegree(int);
 
 	void setControlPoints(vector<Point>);
+	void generateCenter();
 
 	void addControlPoint(Point);
 	void addControlPoint(double, double);

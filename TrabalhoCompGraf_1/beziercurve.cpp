@@ -5,12 +5,12 @@ BezierCurve::BezierCurve(void) {
 	Curve::Curve();
 }
 
-
 BezierCurve::~BezierCurve(void) {
 
 }
 
 void BezierCurve::refresh() {
+
 	m_curvePoints.clear();
 
 	for (double t = 0.0f; t <= 1.0f; t += 0.01f){
@@ -23,6 +23,8 @@ void BezierCurve::refresh() {
 		
 		addCurvePoint(x, y);
 	}
+
+	Curve::refresh();
 }
 
 double BezierCurve::factorial(int value){

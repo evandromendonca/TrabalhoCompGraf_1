@@ -1,4 +1,5 @@
 #include "curve.h"
+#include "main.h"
 
 
 Curve::Curve(void) {
@@ -32,7 +33,8 @@ void Curve::draw(GLfloat r, GLfloat g, GLfloat b) {
 
 
 void Curve::refresh() {
-
+	if ( Main::getInstance()->getState() != ROTATING_CURVE_AXIS)
+		generateCenter();
 }
 
 bool Curve::hasAllControlPoints() { 
@@ -105,28 +107,7 @@ void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 }
 
 void Curve::rotateCurveAxis(Point mouseMoveDistance) {
-
-	//TODO
 	if (mouseMoveDistance.getX() != 0) {
-
-		int xMin = m_controlPoints.at(0).getX(), 
-			xMax = m_controlPoints.at(0).getX(), 
-			yMin = m_controlPoints.at(0).getY(), 
-			yMax = m_controlPoints.at(0).getY();
-
-		for (size_t i = 0; i < m_controlPoints.size(); i++)
-		{
-			if( m_controlPoints.at(i).getX() < xMin )
-				xMin = m_controlPoints.at(i).getX();
-			if( m_controlPoints.at(i).getX() > xMax )
-				xMax = m_controlPoints.at(i).getX();
-			if( m_controlPoints.at(i).getY() < yMin )
-				yMin = m_controlPoints.at(i).getY();
-			if( m_controlPoints.at(i).getY() > yMax )
-				yMax = m_controlPoints.at(i).getY();
-		}
-
-		m_center.setPosition((xMin+xMax)/2, (yMin+yMax)/2);
 
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - m_center.getX(), m_controlPoints.at(i).getY() - m_center.getY());
@@ -138,7 +119,6 @@ void Curve::rotateCurveAxis(Point mouseMoveDistance) {
 		}
 
 		refresh();
-
 	}
 }
 
@@ -161,6 +141,17 @@ void Curve::scaleCurve(Point mouseMoveDistance) {
 
 		refresh();
 	}
+}
+
+void Curve::generateCenter() {
+	int somaX = 0, somaY = 0;
+	for (int i = 0; i < m_controlPoints.size(); i++)
+	{
+		somaX += m_controlPoints.at(i).getX();
+		somaY += m_controlPoints.at(i).getY();
+	}
+
+	m_center.setPosition(somaX/m_controlPoints.size(), somaY/m_controlPoints.size());
 }
 
 vector<Point> Curve::getControlPoints() {
