@@ -96,8 +96,16 @@ void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - CENTER_X, m_controlPoints.at(i).getY() - CENTER_Y);
 
+			double xOld = m_controlPoints.at(i).getX();
+			double yOld = m_controlPoints.at(i).getY();
+
+			m_controlPoints.at(i).setX( xOld * cos((mouseMoveDistance.getX() / RAD)*PI) - yOld * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
+			m_controlPoints.at(i).setY( xOld * sin((mouseMoveDistance.getX() / RAD)*PI) + yOld * cos((mouseMoveDistance.getX() / RAD)*PI) );
+
+			/*
 			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX() / RAD)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
 			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX() / RAD)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX() / RAD)*PI) );
+			*/
 
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + CENTER_X, m_controlPoints.at(i).getY() + CENTER_Y);
 		}
@@ -112,8 +120,11 @@ void Curve::rotateCurveAxis(Point mouseMoveDistance) {
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() - m_center.getX(), m_controlPoints.at(i).getY() - m_center.getY());
 
-			m_controlPoints.at(i).setX( m_controlPoints.at(i).getX() * cos((mouseMoveDistance.getX() / RAD)*PI) - m_controlPoints.at(i).getY() * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
-			m_controlPoints.at(i).setY( m_controlPoints.at(i).getX() * sin((mouseMoveDistance.getX() / RAD)*PI) + m_controlPoints.at(i).getY() * cos((mouseMoveDistance.getX() / RAD)*PI) );
+			double xOld = m_controlPoints.at(i).getX();
+			double yOld = m_controlPoints.at(i).getY();
+
+			m_controlPoints.at(i).setX( xOld * cos((mouseMoveDistance.getX() / RAD)*PI) - yOld * sin((mouseMoveDistance.getX() / RAD)*PI) ); 
+			m_controlPoints.at(i).setY( xOld * sin((mouseMoveDistance.getX() / RAD)*PI) + yOld * cos((mouseMoveDistance.getX() / RAD)*PI) );
 
 			m_controlPoints.at(i).setPosition(m_controlPoints.at(i).getX() + m_center.getX(), m_controlPoints.at(i).getY() + m_center.getY());
 		}
