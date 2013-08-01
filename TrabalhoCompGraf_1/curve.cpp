@@ -91,6 +91,7 @@ void Curve::translateCurve(Point mouseMoveDistance) {
 }
 
 void Curve::rotateCurveScreen(Point mouseMoveDistance) {
+	mouseMoveDistance.setX(mouseMoveDistance.getX()*-1);
 	if (mouseMoveDistance.getX() != 0) {
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
 
@@ -110,6 +111,7 @@ void Curve::rotateCurveScreen(Point mouseMoveDistance) {
 }
 
 void Curve::rotateCurveAxis(Point mouseMoveDistance) {
+	mouseMoveDistance.setX(mouseMoveDistance.getX()*-1);
 	if (mouseMoveDistance.getX() != 0) {
 
 		for (size_t i = 0; i < m_controlPoints.size() ; i++) {
