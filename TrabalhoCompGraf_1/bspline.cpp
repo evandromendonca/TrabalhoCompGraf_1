@@ -31,7 +31,7 @@ void BSpline::refresh() {
 }
 
 bool BSpline::hasAllControlPoints() { 
-	return m_controlPoints.size() > m_curveDegree;
+	return m_controlPoints.size() > (size_t) m_curveDegree;
 }
 
 CURVE_TYPE BSpline::getType() {

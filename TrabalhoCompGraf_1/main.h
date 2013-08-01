@@ -38,8 +38,6 @@ public functions:
 
 	void deleteCurve();
 
-	void createMenu();
-
 private members:
 	static Main *m_instance;
 	vector<Curve*> m_curves;
@@ -59,4 +57,6 @@ private members:
 	int m_assignedDegree;
 	CURVE_TYPE m_assignedType;
 
+private functions:
+	void createMenu();
 };

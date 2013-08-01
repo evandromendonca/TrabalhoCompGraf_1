@@ -132,7 +132,7 @@ void Main::deleteCurve() {
 void Main::createMenu(void) {
 	if (m_currentState == CURVE_SELECTED) {
 		m_rotateTypeSubMenuID = glutCreateMenu(menu);
-		glutAddMenuEntry("Em torno ao centro da tela", 15);
+		glutAddMenuEntry("Em torno do centro da tela", 15);
 		glutAddMenuEntry("Em torno do seu centro", 16);
 
 		m_curveOptionsSubMenuID = glutCreateMenu(menu);

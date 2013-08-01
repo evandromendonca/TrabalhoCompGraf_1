@@ -17,7 +17,7 @@ public:
 	virtual bool hasAllControlPoints();
 	virtual CURVE_TYPE getType();
 
-	void draw(GLfloat, GLfloat, GLfloat);
+	void draw(GLdouble, GLdouble, GLdouble);
 	void setCurveDegree(int);
 
 	void setControlPoints(vector<Point>);
